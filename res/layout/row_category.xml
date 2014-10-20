@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:weightSum="10.0" >
+
+    <ImageView
+        android:id="@+id/category_background"
+        android:layout_width="70.0dip"
+        android:layout_height="70.0dip"
+        android:layout_margin="8.0sp"
+        android:contentDescription="@string/app_name"
+        android:orientation="vertical" />
+
+    <LinearLayout
+        android:layout_width="0.0dip"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="8.0sp"
+        android:layout_weight="6.5"
+        android:gravity="left|center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/category_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13.0sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/number_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5.0sp"
+            android:textSize="11.0sp" />
+
+        <TextView
+            android:id="@+id/number_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5.0sp"
+            android:textSize="11.0sp" />
+    </LinearLayout>
+
+</LinearLayout>

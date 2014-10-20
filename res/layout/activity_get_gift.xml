@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffffff"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_main"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/ivGameIcon"
+            android:layout_width="70.0sp"
+            android:layout_height="70.0sp"
+            android:layout_marginRight="10.0sp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="10.0" >
+
+            <LinearLayout
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="7.0"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/gameName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Noom Weight Loss Coach"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/ivStarGameDetail1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/hello"
+                        android:src="@drawable/smale_rate_100_per" />
+
+                    <ImageView
+                        android:id="@+id/ivStarGameDetail2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/hello"
+                        android:src="@drawable/smale_rate_100_per" />
+
+                    <ImageView
+                        android:id="@+id/ivStarGameDetail3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/hello"
+                        android:src="@drawable/smale_rate_100_per" />
+
+                    <ImageView
+                        android:id="@+id/ivStarGameDetail4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/hello"
+                        android:src="@drawable/smale_rate_100_per" />
+
+                    <ImageView
+                        android:id="@+id/ivStarGameDetail5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/hello"
+                        android:src="@drawable/smale_rate_100_per" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Số lượng: 555/1000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0.0sp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3.0" >
+
+                <ImageView
+                    android:id="@+id/btGetGift"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bt_gift_selector" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5.0sp"
+        android:layout_marginLeft="10.0sp"
+        android:layout_marginTop="10.0sp"
+        android:text="Thông tin chi tiết"
+        android:textSize="15.0sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+        android:layout_marginBottom="5.0sp"
+        android:layout_marginLeft="10.0sp"
+        android:layout_marginRight="10.0sp"
+        android:background="#ffaa0000" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5.0sp"
+        android:layout_marginLeft="10.0sp"
+        android:layout_marginTop="10.0sp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tvGameName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên game: Noom Weight Loss Coach"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Áp dụng: Toàn bộ server"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số lượng: 1 code/1 account"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thời gian: 01/01/2014 - 01/03/2014"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cách dùng: vào game nhận"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llDetail"
+        android:layout_width="fill_parent"
+        android:layout_height="40.0sp"
+        android:layout_marginTop="10.0sp"
+        android:background="@drawable/bg_main"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="10.0" >
+
+        <TextView
+            android:layout_width="0.0sp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10.0sp"
+            android:layout_weight="9.0"
+            android:text="Chi tiết về game"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="0.0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:src="@drawable/icon_more" />
+    </LinearLayout>
+
+</LinearLayout>

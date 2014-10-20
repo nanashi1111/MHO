@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300.0sp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dl_style_corner"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15.0sp"
+        android:text="Tên chủ đề"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/thread_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15.0sp"
+        android:layout_marginLeft="15.0sp"
+        android:layout_marginRight="15.0sp"
+        android:background="@drawable/et_style_corner"
+        android:paddingLeft="5.0sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15.0sp"
+        android:layout_marginLeft="15.0sp"
+        android:text="Trích dẫn"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/thread_des"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15.0sp"
+        android:layout_marginLeft="15.0sp"
+        android:layout_marginRight="15.0sp"
+        android:background="@drawable/et_style_corner"
+        android:gravity="top|left|center"
+        android:lines="8"
+        android:paddingLeft="5.0sp" />
+
+    <Button
+        android:id="@+id/create_thread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="15.0sp"
+        android:text="KHỞI TẠO"
+        android:textSize="15.0dip" />
+
+</LinearLayout>

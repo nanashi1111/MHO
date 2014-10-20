@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:weightSum="18.1" >
+
+        <ImageView
+            android:id="@+id/banner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/hello"
+            android:src="@drawable/banner_demo" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_marginTop="10.0sp"
+            android:layout_weight="14.3125"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="3.0" >
+
+            <LinearLayout
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="0.0dip"
+                android:layout_marginBottom="10.0sp"
+                android:layout_marginLeft="10.0sp"
+                android:layout_marginRight="10.0sp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="3.0" >
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10.0sp"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/bt_setting_other" />
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10.0sp"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/bt_search_other" />
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/bt_purchase_other" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="0.0dip"
+                android:layout_marginBottom="10.0sp"
+                android:layout_marginLeft="10.0sp"
+                android:layout_marginRight="10.0sp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="3.0" >
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10.0sp"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/bt_facebook_other" />
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10.0sp"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/bt_connect_other" />
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/bt_chat_other" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="0.0dip"
+                android:layout_marginBottom="10.0sp"
+                android:layout_marginLeft="10.0sp"
+                android:layout_marginRight="10.0sp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="3.0" >
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10.0sp"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/bt_map_other" />
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10.0sp"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/bt_read_other" />
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/bt_music_other" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="invisible"
+        android:id="@+id/foot_other"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_navi_menu"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="5.0" >
+
+        <Button
+            android:id="@+id/btGotoGeneral_Other"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/btn_tong_hop" />
+
+        <Button
+            android:id="@+id/btGotoThread_Other"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/btn_chuyen_de" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/btn_khac_focus" />
+
+        <Button
+            android:id="@+id/btGotoRank_Other"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/btn_xep_hang" />
+
+        <Button
+            android:id="@+id/btGotoCategory_Other"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/btn_the_loai" />
+    </LinearLayout>
+
+</FrameLayout>

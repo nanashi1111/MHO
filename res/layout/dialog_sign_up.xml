@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350sp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_login_style"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
+        android:gravity="left"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15sp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginTop="10sp"
+            android:text="@string/signup"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/blue" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/user_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:layout_marginTop="15sp"
+        android:background="@drawable/edittext_login_style"
+        android:hint="@string/user_name"
+        android:inputType="textEmailAddress"
+        android:paddingBottom="5sp"
+        android:paddingTop="5sp"
+        android:textColorHint="@color/gray" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:background="@drawable/edittext_login_style"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:paddingBottom="5sp"
+        android:paddingTop="5sp"
+        android:textColorHint="@color/gray" />
+
+    <EditText
+        android:id="@+id/repassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:background="@drawable/edittext_login_style"
+        android:hint="@string/repassword"
+        android:inputType="textPassword"
+        android:paddingBottom="5sp"
+        android:paddingTop="5sp"
+        android:textColorHint="@color/gray" />
+
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:background="@drawable/edittext_login_style"
+        android:hint="@string/phone"
+        android:inputType="phone"
+        android:paddingBottom="5sp"
+        android:paddingTop="5sp"
+        android:textColorHint="@color/gray" />
+
+    <EditText
+        android:id="@+id/pmail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:background="@drawable/edittext_login_style"
+        android:hint="@string/pmail"
+        android:inputType="textEmailAddress"
+        android:paddingBottom="5sp"
+        android:paddingTop="5sp"
+        android:textColorHint="@color/gray" />
+
+    <Button
+        android:id="@+id/signup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:background="@drawable/edittext_login_style"
+        android:text="@string/signup"
+        android:textColor="@color/black" />
+
+</LinearLayout>

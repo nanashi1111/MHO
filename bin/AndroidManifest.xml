@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.maihoangonline.mho"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" >
+    </uses-permission>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon_game_demo"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.AppCompat.Light" >
+        <activity
+            android:name="com.maihoangonline.mho.HomeActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.maihoangonline.mho.GameDetailActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.maihoangonline.mho.OtherActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.maihoangonline.mho.ListGameActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.maihoangonline.mho.NewsActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.maihoangonline.mho.SearchActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.maihoangonline.mho.UserInfoActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.maihoangonline.mho.GiftActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.maihoangonline.mho.GetGiftActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.maihoangonline.mho.ListThreadActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.maihoangonline.mho.DownloadProgressActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <receiver android:name="com.maihoangonline.receiver.DownloadCompleteReceiver" >
+            <intent-filter>
+                <action android:name="download_complete" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="download_error" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" />
+    </application>
+
+</manifest>

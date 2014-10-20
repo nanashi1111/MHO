@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llGameDetailScreen"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <!-- row 1 -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5sp"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="11" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="7" >
+
+            <ImageView
+                android:id="@+id/icon_game"
+                android:layout_width="75sp"
+                android:layout_height="75sp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="3dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/icon_game_demo" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/icon_game"
+                android:layout_marginLeft="7dp"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/star1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/smale_rate_100_per" />
+
+                <ImageView
+                    android:id="@+id/star2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/smale_rate_100_per" />
+
+                <ImageView
+                    android:id="@+id/star3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/smale_rate_100_per" />
+
+                <ImageView
+                    android:id="@+id/star4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/smale_rate_100_per" />
+
+                <ImageView
+                    android:id="@+id/star5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/smale_rate_100_per" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10sp"
+                android:layout_toRightOf="@id/icon_game"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/game_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/game_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5sp"
+                    android:drawableLeft="@drawable/icon_phone"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/game_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5sp"
+                    android:drawableLeft="@drawable/icon_down"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/game_version_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5sp"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/total_download"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5sp"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="4"
+            android:gravity="center_vertical|right"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bt_share_selector"
+                android:contentDescription="@string/app_name" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/download"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bt_download_selector"
+                    android:contentDescription="@string/app_name" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- row 1 -->
+    <!-- Line -->
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="3sp"
+        android:background="#696969" />
+    <!-- Line -->
+    <!-- row 2 -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5sp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/chi_tiet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6sp"
+            android:contentDescription="@string/app_name" />
+
+        <ImageView
+            android:id="@+id/danh_gia_nhan_xet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6sp"
+            android:contentDescription="@string/app_name" />
+
+        <ImageView
+            android:id="@+id/bo_suu_tap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6sp"
+            android:contentDescription="@string/app_name" />
+
+        <ImageView
+            android:id="@+id/lien_quan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6sp"
+            android:contentDescription="@string/app_name" />
+    </LinearLayout>
+    <!-- row 2 -->
+    <!-- Line -->
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="3sp"
+        android:layout_marginTop="3sp"
+        android:background="#ffffff" />
+    <!-- Line -->
+    <!-- row 3 -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="10sp"
+        android:layout_marginLeft="3sp"
+        android:layout_marginRight="3sp"
+        android:layout_marginTop="3sp"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/rate1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3sp"
+                android:layout_marginLeft="5sp"
+                android:layout_marginRight="5sp"
+                android:layout_marginTop="3sp"
+                android:contentDescription="@string/app_name" />
+
+            <ImageView
+                android:id="@+id/rate2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3sp"
+                android:layout_marginRight="5sp"
+                android:layout_marginTop="3sp"
+                android:contentDescription="@string/app_name" />
+
+            <ImageView
+                android:id="@+id/rate3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3sp"
+                android:layout_marginRight="5sp"
+                android:layout_marginTop="3sp"
+                android:contentDescription="@string/app_name" />
+
+            <ImageView
+                android:id="@+id/rate4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3sp"
+                android:layout_marginRight="5sp"
+                android:layout_marginTop="3sp"
+                android:contentDescription="@string/app_name" />
+
+            <ImageView
+                android:id="@+id/rate5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3sp"
+                android:layout_marginRight="5sp"
+                android:layout_marginTop="3sp"
+                android:contentDescription="@string/app_name" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="right"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginLeft="10sp"
+                android:layout_marginRight="40sp"
+                android:text="@string/default_rate"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/danh_gia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginTop="3sp"
+                android:contentDescription="@string/app_name" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

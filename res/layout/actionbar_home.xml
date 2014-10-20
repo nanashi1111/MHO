@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_navi_menu"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:weightSum="14" >
+
+    <ImageView
+        android:id="@+id/toggle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_weight="2"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/btn_human" />
+
+    <FrameLayout
+        android:id="@+id/frame_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_weight="8" >
+
+        <TextView
+            android:id="@+id/home_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/maihoang"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <SearchView
+        android:id="@+id/search_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="13"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5sp"
+        android:layout_marginRight="5sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginLeft="5sp"
+        android:background="@drawable/searchbeauty"
+        android:visibility="gone" >
+    </SearchView>
+
+    <ImageView
+        android:id="@+id/search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_weight="2"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/btn_search" />
+
+    <ImageView
+        android:id="@+id/download"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_weight="2"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/btn_download" />
+
+</LinearLayout>

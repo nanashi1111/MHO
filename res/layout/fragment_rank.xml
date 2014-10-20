@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2.0" >
+
+            <LinearLayout
+                android:id="@+id/top_game"
+                android:layout_width="0.0dip"
+                android:layout_height="40.0sp"
+                android:layout_weight="1.0"
+                android:background="@drawable/bg_main"
+                android:gravity="center" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/hello"
+                    android:src="@drawable/smale_rate_gray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0sp"
+                    android:text="@string/top_game"
+                    android:textSize="15.0sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0.5dip"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="2.0sp"
+                android:layout_marginTop="2.0sp"
+                android:background="#ffbbbbbb" />
+
+            <LinearLayout
+                android:id="@+id/top_app"
+                android:layout_width="0.0dip"
+                android:layout_height="40.0sp"
+                android:layout_weight="1.0"
+                android:background="@drawable/bg_main"
+                android:gravity="center" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/hello"
+                    android:src="@drawable/icon_down" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0sp"
+                    android:text="@string/top_app"
+                    android:textSize="15.0sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <com.costum.android.widget.LoadMoreListView
+                android:id="@+id/list_top"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

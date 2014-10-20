@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3.0" >
+
+        <ImageView
+            android:id="@+id/category_game"
+            android:layout_width="0.0sp"
+            android:layout_height="40.0sp"
+            android:layout_weight="1.0"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/btn_game_115" />
+
+        <ImageView
+            android:id="@+id/category_app"
+            android:layout_width="0.0sp"
+            android:layout_height="40.0sp"
+            android:layout_weight="1.0"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/btn_app" />
+
+        <ImageView
+            android:id="@+id/category_game_online"
+            android:layout_width="0.0sp"
+            android:layout_height="40.0sp"
+            android:layout_weight="1.0"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/btn_game_online" />
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/list_category"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:numColumns="2"
+        android:stretchMode="columnWidth" />
+
+</LinearLayout>
