@@ -229,6 +229,7 @@
             android:background="#ff1c1f26" />
 
         <LinearLayout
+            android:id="@+id/pay_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -277,6 +278,7 @@
             android:background="#ff1c1f26" />
 
         <LinearLayout
+            android:id="@+id/transfer_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -373,6 +375,7 @@
             android:background="#ff1c1f26" />
 
         <LinearLayout
+            android:id="@+id/get_acc_info_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"

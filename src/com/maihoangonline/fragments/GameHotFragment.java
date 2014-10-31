@@ -52,9 +52,13 @@ public class GameHotFragment extends Fragment implements OnClickListener,
 	private ArrayList<Game> listAppItem = new ArrayList<Game>();
 	private ListGameAdapter appHotAdapter;
 	private int indexAppHot = 0;
+	//List new game app
+	private ArrayList<Game> listNewGameAppItem = new ArrayList<Game>();
+	private ListGameAdapter newGameAppAdapter;
+	private int indexNewGameApp = 0;
 
 	// Mode (game, app, new game app, event
-	private int mode = 1; // 1 = GAME; 2 = APP
+	private int mode = 1; // 1 = GAME; 2 = APP; 3=NEW GAME APP
 	private ProgressDialog d;
 
 	private GameHotFragment() {
@@ -75,6 +79,7 @@ public class GameHotFragment extends Fragment implements OnClickListener,
 		listGame = (LoadMoreListView) rootView.findViewById(R.id.list_game);
 		gameHotAdapter = new ListGameAdapter(getActivity(), 1, listGameItem);
 		appHotAdapter = new ListGameAdapter(getActivity(), 1, listAppItem);
+		newGameAppAdapter = new ListGameAdapter(getActivity(), 1, listNewGameAppItem);
 		listGame.setAdapter(gameHotAdapter);
 		listGame.setOnItemClickListener(this);
 		listGame.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -87,6 +92,8 @@ public class GameHotFragment extends Fragment implements OnClickListener,
 				} else if (mode == 2) {
 					//new LoadAppHot().execute(indexAppHot);
 					loadAppHot();
+				}else if(mode==3){
+					loadNewGameApp();
 				}
 			}
 		});
@@ -103,12 +110,12 @@ public class GameHotFragment extends Fragment implements OnClickListener,
 	}
 	
 	private void loadGameHot(){
+		if(listGameItem.size()>0){
+			return;
+		}
 		d = ProgressDialog.show(getActivity(), "",
 				"Đang tải danh sách game hot...");
 		JsonHttpResponseHandler handler = new JsonHttpResponseHandler(){
-
-			
-			
 
 			@Override
 			public void onFailure(int statusCode, Header[] headers,
@@ -120,8 +127,6 @@ public class GameHotFragment extends Fragment implements OnClickListener,
 				}
 				super.onFailure(statusCode, headers, throwable, errorResponse);
 			}
-
-
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
@@ -172,7 +177,78 @@ public class GameHotFragment extends Fragment implements OnClickListener,
 		ServiceConnection.getListGameHot(indexGameHot, handler);
 	}
 	
+	private void loadNewGameApp(){
+		if(listNewGameAppItem.size()>0){
+			return;
+		}
+		d = ProgressDialog.show(getActivity(), "",
+				"Đang tải danh sách game app mới...");
+		JsonHttpResponseHandler handler = new JsonHttpResponseHandler(){
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONObject errorResponse) {
+				((HomeActivity)getActivity()).makeToast("Lỗi kết nối");
+				if(d!=null){
+					d.dismiss();
+					d=null;
+				}
+				super.onFailure(statusCode, headers, throwable, errorResponse);
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+				super.onSuccess(statusCode, headers, response);
+				JSONObject jsonNewGameApp = response;
+				try {
+					JSONArray arrayGame = jsonNewGameApp.getJSONArray("DataList");
+					for (int i = 0; i < arrayGame.length(); i++) {
+						JSONObject gameItem = arrayGame.getJSONObject(i);
+						Game game = new Game();
+						game.setId(gameItem.getInt("Id"));
+						game.setTitle(gameItem.getString("Title"));
+						game.setIdGroup(gameItem.getInt("IdGroup"));
+						game.setIdSystem(gameItem.getInt("IdSystem"));
+						game.setPicture(gameItem.getString("Picture"));
+						game.setPictureAlbum(gameItem.getString("PictureAlbum"));
+						game.setDes(gameItem.getString("Des"));
+						game.setDetail(gameItem.getString("Detail"));
+						game.setIdCategoryGame(gameItem.getInt("IdCategoryGame"));
+						game.setHotGame(gameItem.getBoolean("HotGame"));
+						game.setNewGame(gameItem.getBoolean("NewGame"));
+						game.setFile(gameItem.getString("File"));
+						game.setDownload(gameItem.getInt("Download"));
+						game.setRate(gameItem.getInt("Rate"));
+						game.setVersion(gameItem.getString("Version"));
+						game.setSize(gameItem.getString("Size"));
+						game.setView(gameItem.getInt("View"));
+						game.setFreeGame(gameItem.getBoolean("FreeGame"));
+						listNewGameAppItem.add(game);
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				newGameAppAdapter.notifyDataSetChanged();
+				indexNewGameApp++;
+				listGame.onLoadMoreComplete();
+				listGame.smoothScrollToPosition(newGameAppAdapter.getCount() - 10);
+				if (d != null) {
+					d.dismiss();
+					d=null;
+				}
+			}
+			
+			
+		};
+		ServiceConnection.getListNewGameApp(indexNewGameApp, handler);
+		
+	}
+	
 	private void loadAppHot(){
+		if(listAppItem.size()>0){
+			return;
+		}
 		d = ProgressDialog.show(getActivity(), "",
 				"Đang tải danh sách app hot...");
 		JsonHttpResponseHandler handler = new JsonHttpResponseHandler(){
@@ -429,6 +505,10 @@ public class GameHotFragment extends Fragment implements OnClickListener,
 			listGame.setAdapter(appHotAdapter);
 			//new LoadAppHot().execute(indexAppHot);
 			loadAppHot();
+			break;
+		case R.id.game_app_new:
+			listGame.setAdapter(newGameAppAdapter);
+			loadNewGameApp();
 			break;
 		case R.id.event_gift:
 			Intent intent = new Intent(getActivity(), GiftActivity.class);

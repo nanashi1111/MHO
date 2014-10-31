@@ -26,6 +26,7 @@ import com.maihoangonline.models.Topic;
 
 public class ServiceConnection {
 
+	// Link API
 	private static final String URL_LOGIN = "http://api.mho.vn/services/account?type=login";
 	private static final String URL_SIGNUP = "http://api.mho.vn/services/account?type=register";
 	private static final String URL_GET_USER_INFO = "http://paygate.mho.vn/AccountInfo/GetInfo?serviceId=200001";
@@ -54,6 +55,14 @@ public class ServiceConnection {
 	private static final String URL_ADD_GAME_TO_THREAD = "http://mobile.mho.vn/services/ChuDe?Type=1&key=mho123190456$@!";
 	private static final String URL_GET_GAME_IN_THREAD = "http://mobile.mho.vn/services/chude?gameid=0&pageIndex=0&pageSize=100&key=mho123190456$@!";
 	private static final String URL_DELETE_THREAD = "http://mobile.mho.vn/services/ChuDe?Type=3&IdSystem=1&Name=1&Des=1&key=mho123190456$@!";
+	private static final String URL_GET_GAME_NEW = "http://mobile.mho.vn/services/Game?IdCategoryGame=0&IdSystem=1&IdGroup=1&isHot=0&isNews=1&isMostView=0&pageSize=10&key=mho123190456$@!";
+	private static final String URL_PAY_GOLD = "http://paygate.mho.vn/Recharge/Card";
+	private static final String URL_SEND_DEVICE_TOKEN = "http://mobile.mho.vn/services/NotificationTongBu?IdSystem=1&key=mho123190456$@!";
+	private static final String URL_TRANSFER_GOLD = "http://paygate.mho.vn/Transfer/MHOTransferGoldToUser";
+	private static final String URL_GET_ACC_INFO = "http://paygate.mho.vn/AccountInfo/GetInfo";
+	// Constant
+	private static final String SERVICED = "2";
+	private static final String SERVICE_TOKEN = "757c7aa7-2c95-4f5f-910c-54c862f1b271";
 
 	public static JSONObject login(String email, String password) {
 		return JSONUtil.getJSONObject(URL_LOGIN, new String[] { "serviceID",
@@ -76,51 +85,55 @@ public class ServiceConnection {
 		return JSONUtil.getJSONObject(URL_GET_USER_INFO, list);
 	}
 
-	/*public static JSONObject getListGameHot(int pageIndex) {
-		return JSONUtil.getJSONObject(URL_GET_GAME_HOT,
-				new String[] { "pageIndex" },
-				new String[] { Integer.toString(pageIndex) });
-	}*/
-	
-	public static void getListGameHot(int pageIndex, JsonHttpResponseHandler responseHandler){
+	/*
+	 * public static JSONObject getListGameHot(int pageIndex) { return
+	 * JSONUtil.getJSONObject(URL_GET_GAME_HOT, new String[] { "pageIndex" },
+	 * new String[] { Integer.toString(pageIndex) }); }
+	 */
+
+	public static void getListGameHot(int pageIndex,
+			JsonHttpResponseHandler responseHandler) {
 		RequestParams params = new RequestParams("pageIndex", pageIndex);
 		JSONUtil.get(URL_GET_GAME_HOT, params, responseHandler);
 	}
 
-	/*public static JSONObject getListAppHot(int pageIndex) {
-		return JSONUtil.getJSONObject(URL_GET_APP_HOT,
-				new String[] { "pageIndex" },
-				new String[] { Integer.toString(pageIndex) });
-	}*/
-	
-	public static void getListAppHot(int pageIndex, JsonHttpResponseHandler responseHandler){
+	/*
+	 * public static JSONObject getListAppHot(int pageIndex) { return
+	 * JSONUtil.getJSONObject(URL_GET_APP_HOT, new String[] { "pageIndex" }, new
+	 * String[] { Integer.toString(pageIndex) }); }
+	 */
+
+	public static void getListAppHot(int pageIndex,
+			JsonHttpResponseHandler responseHandler) {
 		RequestParams params = new RequestParams("pageIndex", pageIndex);
 		JSONUtil.get(URL_GET_APP_HOT, params, responseHandler);
 	}
 
-	/*public static String vote(Game game, int rate) {
-		return JSONUtil.sendRequest(URL_VOTE,
-				new String[] { "IdGame", "Rating" },
-				new String[] { game.getId() + "", rate + "" });
-	}*/
-	
-	public static void vote(Game game, int rate, AsyncHttpResponseHandler handler){
-		RequestParams params= new RequestParams();
+	/*
+	 * public static String vote(Game game, int rate) { return
+	 * JSONUtil.sendRequest(URL_VOTE, new String[] { "IdGame", "Rating" }, new
+	 * String[] { game.getId() + "", rate + "" }); }
+	 */
+
+	public static void vote(Game game, int rate,
+			AsyncHttpResponseHandler handler) {
+		RequestParams params = new RequestParams();
 		params.put("IdGame", game.getId());
 		params.put("Rating", rate);
 		JSONUtil.get(URL_VOTE, params, handler);
 	}
 
-	/*public static JSONObject getListRelated(Game game, int pageIndex) {
-		return JSONUtil.getJSONObject(
-				URL_GET_RELATED,
-				new String[] { "IdGame", "IdCategoryGame", "pageIndex" },
-				new String[] { Integer.toString(game.getId()),
-						Integer.toString(game.getIdCategoryGame()),
-						Integer.toString(pageIndex) });
-	}*/
-	
-	public static void getListRelated(Game game, int pageIndex, JsonHttpResponseHandler handler){
+	/*
+	 * public static JSONObject getListRelated(Game game, int pageIndex) {
+	 * return JSONUtil.getJSONObject( URL_GET_RELATED, new String[] { "IdGame",
+	 * "IdCategoryGame", "pageIndex" }, new String[] {
+	 * Integer.toString(game.getId()),
+	 * Integer.toString(game.getIdCategoryGame()), Integer.toString(pageIndex)
+	 * }); }
+	 */
+
+	public static void getListRelated(Game game, int pageIndex,
+			JsonHttpResponseHandler handler) {
 		RequestParams params = new RequestParams();
 		params.put("IdGame", game.getId());
 		params.put("IdCategoryGame", game.getIdCategoryGame());
@@ -128,66 +141,68 @@ public class ServiceConnection {
 		JSONUtil.get(URL_GET_RELATED, params, handler);
 	}
 
-	/*public static JSONObject getListCategoryApp() {
-		return JSONUtil.getJSONObject(URL_GET_LIST_CATEGORY_APP,
-				new String[] {}, new String[] {});
-	}*/
-	
-	public static void getListCategoryApp(JsonHttpResponseHandler handler){
+	/*
+	 * public static JSONObject getListCategoryApp() { return
+	 * JSONUtil.getJSONObject(URL_GET_LIST_CATEGORY_APP, new String[] {}, new
+	 * String[] {}); }
+	 */
+
+	public static void getListCategoryApp(JsonHttpResponseHandler handler) {
 		JSONUtil.get(URL_GET_LIST_CATEGORY_APP, handler);
 	}
-	
-	
 
-	/*public static JSONObject getListCategoryGame() {
-		return JSONUtil.getJSONObject(URL_GET_LIST_CATEGORY_GAME,
-				new String[] {}, new String[] {});
-	}*/
-	
-	public static void getListCategoryGame(JsonHttpResponseHandler handler){
+	/*
+	 * public static JSONObject getListCategoryGame() { return
+	 * JSONUtil.getJSONObject(URL_GET_LIST_CATEGORY_GAME, new String[] {}, new
+	 * String[] {}); }
+	 */
+
+	public static void getListCategoryGame(JsonHttpResponseHandler handler) {
 		JSONUtil.get(URL_GET_LIST_CATEGORY_GAME, handler);
 	}
 
-	/*public static JSONObject getListCategoryGameOnline() {
-		return JSONUtil.getJSONObject(URL_GET_LIST_CATEGORY_GAME_ONLINE,
-				new String[] {}, new String[] {});
-	}*/
-	
-	public static void getListCategoryGameOnline(JsonHttpResponseHandler handler){
+	/*
+	 * public static JSONObject getListCategoryGameOnline() { return
+	 * JSONUtil.getJSONObject(URL_GET_LIST_CATEGORY_GAME_ONLINE, new String[]
+	 * {}, new String[] {}); }
+	 */
+
+	public static void getListCategoryGameOnline(JsonHttpResponseHandler handler) {
 		JSONUtil.get(URL_GET_LIST_CATEGORY_GAME_ONLINE, handler);
 	}
 
-	/*public static JSONObject getRankGame(int pageIndex) {
-		return JSONUtil.getJSONObject(URL_GET_GAME_RANK,
-				new String[] { "pageIndex" },
-				new String[] { Integer.toString(pageIndex) });
-	}*/
-	
-	public static void getRankGame(int pageIndex, JsonHttpResponseHandler handler){
+	/*
+	 * public static JSONObject getRankGame(int pageIndex) { return
+	 * JSONUtil.getJSONObject(URL_GET_GAME_RANK, new String[] { "pageIndex" },
+	 * new String[] { Integer.toString(pageIndex) }); }
+	 */
+
+	public static void getRankGame(int pageIndex,
+			JsonHttpResponseHandler handler) {
 		RequestParams params = new RequestParams("pageIndex", pageIndex);
 		JSONUtil.get(URL_GET_GAME_RANK, params, handler);
 	}
 
-	/*public static JSONObject getRankApp(int pageIndex) {
-		return JSONUtil.getJSONObject(URL_GET_APP_RANK,
-				new String[] { "pageIndex" },
-				new String[] { Integer.toString(pageIndex) });
-	}*/
-	
-	public static void getRankApp(int pageIndex, JsonHttpResponseHandler handler){
+	/*
+	 * public static JSONObject getRankApp(int pageIndex) { return
+	 * JSONUtil.getJSONObject(URL_GET_APP_RANK, new String[] { "pageIndex" },
+	 * new String[] { Integer.toString(pageIndex) }); }
+	 */
+
+	public static void getRankApp(int pageIndex, JsonHttpResponseHandler handler) {
 		RequestParams params = new RequestParams("pageIndex", pageIndex);
 		JSONUtil.get(URL_GET_APP_RANK, params, handler);
 	}
 
-	/*public static JSONObject getListGameInCategory(Category cat, int pageIndex) {
-		return JSONUtil.getJSONObject(
-				URL_GET_GAME_IN_CATEGORY,
-				new String[] { "IdCategoryGame", "pageIndex" },
-				new String[] { Integer.toString(cat.getId()),
-						Integer.toString(pageIndex) });
-	}*/
-	
-	public static void getListGameInCategory(Category cat, int pageIndex, JsonHttpResponseHandler handler){
+	/*
+	 * public static JSONObject getListGameInCategory(Category cat, int
+	 * pageIndex) { return JSONUtil.getJSONObject( URL_GET_GAME_IN_CATEGORY, new
+	 * String[] { "IdCategoryGame", "pageIndex" }, new String[] {
+	 * Integer.toString(cat.getId()), Integer.toString(pageIndex) }); }
+	 */
+
+	public static void getListGameInCategory(Category cat, int pageIndex,
+			JsonHttpResponseHandler handler) {
 		RequestParams params = new RequestParams();
 		params.put("IdCategoryGame", cat.getId());
 		params.put("pageIndex", pageIndex);
@@ -200,13 +215,14 @@ public class ServiceConnection {
 				new String[] { Integer.toString(pageIndex) });
 	}
 
-	/*public static JSONObject getListNesw(int pageIndex) {
-		return JSONUtil.getJSONObject(URL_GET_NEWS,
-				new String[] { "pageIndex" },
-				new String[] { Integer.toString(pageIndex) });
-	}*/
-	
-	public static void getListNews(int pageIndex, JsonHttpResponseHandler handler){
+	/*
+	 * public static JSONObject getListNesw(int pageIndex) { return
+	 * JSONUtil.getJSONObject(URL_GET_NEWS, new String[] { "pageIndex" }, new
+	 * String[] { Integer.toString(pageIndex) }); }
+	 */
+
+	public static void getListNews(int pageIndex,
+			JsonHttpResponseHandler handler) {
 		RequestParams params = new RequestParams("pageIndex", pageIndex);
 		JSONUtil.get(URL_GET_NEWS, params, handler);
 	}
@@ -217,24 +233,26 @@ public class ServiceConnection {
 				new String[] { Integer.toString(news.getID()) });
 	}
 
-	/*public static JSONObject search(String q, int p) {
-		return JSONUtil.getJSONObject(URL_SEARCH, new String[] { "q", "p" },
-				new String[] { q, Integer.toString(p) });
-	}*/
-	
-	public static void search(String q, int p, JsonHttpResponseHandler handler){
+	/*
+	 * public static JSONObject search(String q, int p) { return
+	 * JSONUtil.getJSONObject(URL_SEARCH, new String[] { "q", "p" }, new
+	 * String[] { q, Integer.toString(p) }); }
+	 */
+
+	public static void search(String q, int p, JsonHttpResponseHandler handler) {
 		RequestParams params = new RequestParams();
 		params.put("q", q);
 		params.put("p", p);
 		JSONUtil.get(URL_SEARCH, params, handler);
 	}
 
-	/*public static JSONObject incViewGame(Game game) {
-		return JSONUtil.getJSONObject(URL_INC_VIEW_GAME, new String[] { "g" },
-				new String[] { Integer.toString(game.getId()) });
-	}*/
-	
-	public static void incViewGame(Game game, AsyncHttpResponseHandler handler){
+	/*
+	 * public static JSONObject incViewGame(Game game) { return
+	 * JSONUtil.getJSONObject(URL_INC_VIEW_GAME, new String[] { "g" }, new
+	 * String[] { Integer.toString(game.getId()) }); }
+	 */
+
+	public static void incViewGame(Game game, AsyncHttpResponseHandler handler) {
 		RequestParams params = new RequestParams("g", game.getId());
 		JSONUtil.get(URL_INC_VIEW_GAME, params, handler);
 	}
@@ -262,17 +280,23 @@ public class ServiceConnection {
 				new String[] { Integer.toString(topic.getId()),
 						Integer.toString(pageIndex) });
 	}
-	
-	public static void getListGameInTopic(Topic topic, int pageIndex, JsonHttpResponseHandler handler){
+
+	public static void getListGameInTopic(Topic topic, int pageIndex,
+			JsonHttpResponseHandler handler) {
 		RequestParams params = new RequestParams();
 		params.put("IdToppic", topic.getId());
 		params.put("pageIndex", pageIndex);
 		JSONUtil.get(URL_GET_GAME_IN_TOPIC, params, handler);
 	}
 
-	public static JSONObject getPublicGift() {
-		return JSONUtil.getJSONObject(URL_PUBLIC_GIFT, new String[] {},
-				new String[] {});
+	/*
+	 * public static JSONObject getPublicGift() { return
+	 * JSONUtil.getJSONObject(URL_PUBLIC_GIFT, new String[] {}, new String[]
+	 * {}); }
+	 */
+
+	public static void getPublicGift(JsonHttpResponseHandler handler) {
+		JSONUtil.get(URL_PUBLIC_GIFT, handler);
 	}
 
 	public static JSONObject getGift(String email, Game game) {
@@ -281,26 +305,29 @@ public class ServiceConnection {
 				new String[] { email, Integer.toString(game.getId()) });
 	}
 
-	/*public static JSONObject getListThread(String email) {
-		return JSONUtil.getJSONObject(URL_GET_LIST_THREAD,
-				new String[] { "User" }, new String[] { email });
-	}*/
-	
-	public static void getListThread(String email, JsonHttpResponseHandler handler){
+	/*
+	 * public static JSONObject getListThread(String email) { return
+	 * JSONUtil.getJSONObject(URL_GET_LIST_THREAD, new String[] { "User" }, new
+	 * String[] { email }); }
+	 */
+
+	public static void getListThread(String email,
+			JsonHttpResponseHandler handler) {
 		RequestParams params = new RequestParams("User", email);
 		JSONUtil.get(URL_GET_LIST_THREAD, params, handler);
 	}
 
-	/*@SuppressWarnings("deprecation")
-	public static String createThread(int Id, String email, String name,
-			String des) {
-		return JSONUtil.sendRequest(URL_CREATE_THREAD, new String[] { "Id",
-				"Email", "Name", "Des" }, new String[] { Integer.toString(Id),
-				email, URLEncoder.encode(name), URLEncoder.encode(des) });
-	}*/
-	
+	/*
+	 * @SuppressWarnings("deprecation") public static String createThread(int
+	 * Id, String email, String name, String des) { return
+	 * JSONUtil.sendRequest(URL_CREATE_THREAD, new String[] { "Id", "Email",
+	 * "Name", "Des" }, new String[] { Integer.toString(Id), email,
+	 * URLEncoder.encode(name), URLEncoder.encode(des) }); }
+	 */
+
 	@SuppressWarnings("deprecation")
-	public static void createThread(int Id, String email, String name, String des, AsyncHttpResponseHandler handler){
+	public static void createThread(int Id, String email, String name,
+			String des, AsyncHttpResponseHandler handler) {
 		RequestParams params = new RequestParams();
 		params.put("Id", Id);
 		params.put("Email", email);
@@ -309,19 +336,25 @@ public class ServiceConnection {
 		JSONUtil.get(URL_CREATE_THREAD, params, handler);
 	}
 
-	/*public static String addGameToThread(Game game, MHOThread thread) {
-		return JSONUtil.sendRequest(
-				URL_ADD_GAME_TO_THREAD,
-				new String[] { "GameId", "ChuDeId" },
-				new String[] { Integer.toString(game.getId()),
-						Integer.toString(thread.getId()) });
-	}*/
-	
-	public static void addGameToThread(Game game, MHOThread thread, AsyncHttpResponseHandler handler){
+	/*
+	 * public static String addGameToThread(Game game, MHOThread thread) {
+	 * return JSONUtil.sendRequest( URL_ADD_GAME_TO_THREAD, new String[] {
+	 * "GameId", "ChuDeId" }, new String[] { Integer.toString(game.getId()),
+	 * Integer.toString(thread.getId()) }); }
+	 */
+
+	public static void addGameToThread(Game game, MHOThread thread,
+			AsyncHttpResponseHandler handler) {
 		RequestParams params = new RequestParams();
 		params.put("GameId", game.getId());
 		params.put("ChuDeId", thread.getId());
 		JSONUtil.get(URL_ADD_GAME_TO_THREAD, params, handler);
+	}
+
+	public static void getListNewGameApp(int pageIndex,
+			JsonHttpResponseHandler handler) {
+		RequestParams params = new RequestParams("pageIndex", pageIndex);
+		JSONUtil.get(URL_GET_GAME_NEW, params, handler);
 	}
 
 	public static JSONObject getGameInThread(MHOThread thread) {
@@ -329,12 +362,59 @@ public class ServiceConnection {
 				new String[] { "chudeid" },
 				new String[] { Integer.toString(thread.getId()) });
 	}
-	
-	public static void deleteThread(MHOThread thread, String email, AsyncHttpResponseHandler handler){
+
+	public static void payGold(int typeCard, String codeCard,
+			String serialCard, int userId, JsonHttpResponseHandler handler) {
+		RequestParams params = new RequestParams();
+		params.put("typecard", typeCard);
+		params.put("codecard", codeCard);
+		params.put("serialcard", serialCard);
+		params.put("userid", userId);
+		params.put("serviced", SERVICED);
+		params.put(
+				"token",
+				ModelDataUtils.md5(Integer.toString(typeCard) + codeCard
+						+ serialCard + Integer.toString(userId) + SERVICED
+						+ SERVICE_TOKEN));
+		JSONUtil.get(URL_PAY_GOLD, params, handler);
+	}
+
+	public static void transferGold(int userId, String password,
+			String toUserIdOrMail, int gold, JsonHttpResponseHandler handler) {
+		RequestParams params = new RequestParams();
+		params.put("fromUserId", userId);
+		params.put("password", ModelDataUtils.md5(password));
+		params.put("toUserIdOrEmail", toUserIdOrMail);
+		params.put("goldTransfer", gold);
+		params.put("serviced", SERVICED);
+		params.put(
+				"token",
+				ModelDataUtils.md5(Integer.toString(userId)
+						+ ModelDataUtils.md5(password) + toUserIdOrMail
+						+ Integer.toString(gold) + SERVICED + SERVICE_TOKEN));
+		JSONUtil.get(URL_TRANSFER_GOLD, params, handler);
+	}
+
+	public static void sendDeviceToken(String token,
+			AsyncHttpResponseHandler handler) {
+		RequestParams params = new RequestParams("DeviceId", token);
+		JSONUtil.get(URL_SEND_DEVICE_TOKEN, params, handler);
+	}
+
+	public static void deleteThread(MHOThread thread, String email,
+			AsyncHttpResponseHandler handler) {
 		RequestParams params = new RequestParams();
 		params.put("Id", thread.getId());
 		params.put("Email", email);
 		JSONUtil.get(URL_DELETE_THREAD, params, handler);
+	}
+	
+	public static void getAccInfo(String email, JsonHttpResponseHandler handler){
+		RequestParams params = new RequestParams();
+		params.put("userEmail", email);
+		params.put("serviced", SERVICED);
+		params.put("token", ModelDataUtils.md5(email+SERVICED+SERVICE_TOKEN));
+		JSONUtil.get(URL_GET_ACC_INFO, params, handler);
 	}
 
 	public static boolean checkConnection(Context context) {

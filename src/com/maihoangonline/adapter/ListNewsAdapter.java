@@ -30,12 +30,23 @@ public class ListNewsAdapter extends ArrayAdapter<News> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View v;
+		View v = convertView;
+		ViewHolder viewHolder;
+		if(v==null){
 		LayoutInflater inf = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		v = inf.inflate(R.layout.row_news, null);
-		ImageView ivLogo = (ImageView) v.findViewById(R.id.new_logo);
-		UrlImageViewHelper.setUrlDrawable(ivLogo, listNews.get(position)
+		viewHolder = new ViewHolder();
+		viewHolder.ivLogo = (ImageView) v.findViewById(R.id.new_logo);
+		viewHolder.tvTitle = (TextView) v.findViewById(R.id.news_title);
+		viewHolder.tvDescription = (TextView) v
+				.findViewById(R.id.news_description);
+		viewHolder.tvPubdate = (TextView) v.findViewById(R.id.news_pubdate);
+		v.setTag(viewHolder);
+		}else{
+			viewHolder = (ViewHolder)v.getTag();
+		}
+		UrlImageViewHelper.setUrlDrawable(viewHolder.ivLogo, listNews.get(position)
 				.getImagePath(), new UrlImageViewCallback() {
 					
 					@Override
@@ -48,19 +59,22 @@ public class ListNewsAdapter extends ArrayAdapter<News> {
 						}
 					}
 				});
-		TextView tvTitle = (TextView) v.findViewById(R.id.news_title);
-		tvTitle.setText(listNews.get(position).getTitle());
-		TextView tvDescription = (TextView) v
-				.findViewById(R.id.news_description);
-		tvDescription.setText(listNews.get(position).getLead());
-		TextView tvPubdate = (TextView) v.findViewById(R.id.news_pubdate);
-		tvPubdate.setText("19-06-2014");
+		viewHolder.tvTitle.setText(listNews.get(position).getTitle());
+		viewHolder.tvDescription.setText(listNews.get(position).getLead());
+		viewHolder.tvPubdate.setText("19-06-2014");
 		return v;
 	}
 	
 	@Override
 	public int getCount() {
 		return listNews.size();
+	}
+	
+	private static class ViewHolder{
+		ImageView ivLogo;
+		TextView tvTitle;
+		TextView tvDescription;
+		TextView tvPubdate;
 	}
 
 }

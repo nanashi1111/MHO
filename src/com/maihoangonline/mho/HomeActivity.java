@@ -1,5 +1,6 @@
 package com.maihoangonline.mho;
 
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -9,8 +10,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -24,6 +28,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBar.TabListener;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,7 +43,14 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnCloseListener;
 import android.widget.TextView;
+
+import com.google.android.gcm.GCMConstants;
+import com.google.android.gcm.GCMRegistrar;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.maihoangonline.adapter.HomePagerAdapter;
 import com.maihoangonline.adapter.ListOptionAdapter;
 import com.maihoangonline.fragments.GameReviewFragment;
@@ -60,9 +72,9 @@ public class HomeActivity extends BaseActivity implements TabListener,
 	private ProgressDialog dialog;
 	private ActionBar bar;
 	private ViewPager pager;
-
 	private Button btTopic, btOther, btRank, btCategory;
 	private LinearLayout footer;
+	private ProgressDialog d;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +93,12 @@ public class HomeActivity extends BaseActivity implements TabListener,
 		setupActionBar();
 		setupView();
 		DataUtils.activityList.add(this);
+		if (SharePreferenceUtils.getDeviceToken(this).equals("")) {
+			if(checkPlayServices()){
+				new GetDeviceToken().execute();
+			}
+			
+		}
 	}
 
 	private void setupView() {
@@ -123,11 +141,9 @@ public class HomeActivity extends BaseActivity implements TabListener,
 		btOther.setOnClickListener(this);
 		btTopic = (Button) findViewById(R.id.topic);
 		btTopic.setOnClickListener(this);
-		
-		footer = (LinearLayout)findViewById(R.id.footer);
+
+		footer = (LinearLayout) findViewById(R.id.footer);
 	}
-	
-	
 
 	private void setupSlidingMenu() {
 		// *********** Setup sliding menu ***************//
@@ -277,13 +293,16 @@ public class HomeActivity extends BaseActivity implements TabListener,
 				case 4:
 					new GetIPWan().execute();
 					break;
+				case 5:
+					//new UnregisterGCM().execute();
+					break;
 				}
 			}
 		});
 	}
-	
-	private class GetIPWan extends AsyncTask<Void, Void, Void>{
-		
+
+	private class GetIPWan extends AsyncTask<Void, Void, Void> {
+
 		ProgressDialog d;
 		BufferedReader bReader;
 		String sms;
@@ -293,13 +312,14 @@ public class HomeActivity extends BaseActivity implements TabListener,
 			URL url;
 			try {
 				url = new URL("http://checkip.amazonaws.com/");
-				HttpURLConnection con = (HttpURLConnection)url.openConnection();
+				HttpURLConnection con = (HttpURLConnection) url
+						.openConnection();
 				InputStream is = con.getInputStream();
 				InputStreamReader reader = new InputStreamReader(is);
 				bReader = new BufferedReader(reader);
-				sms = bReader==null?"Null":bReader.readLine();
+				sms = bReader == null ? "Null" : bReader.readLine();
 				DisplayUtils.log(sms);
-				
+
 			} catch (MalformedURLException e1) {
 				e1.printStackTrace();
 			} catch (IOException e) {
@@ -310,18 +330,18 @@ public class HomeActivity extends BaseActivity implements TabListener,
 
 		@Override
 		protected void onPostExecute(Void result) {
-			if(d!=null){
+			if (d != null) {
 				d.dismiss();
-				d=null;
+				d = null;
 			}
-				makeToast("Ip wan:"+sms);
+			makeToast("Ip wan:" + sms);
 		}
 
 		@Override
 		protected void onPreExecute() {
 			d = ProgressDialog.show(HomeActivity.this, "", "Getting WAN IP");
 		}
-		
+
 	}
 
 	private void setupActionBar() {
@@ -366,7 +386,8 @@ public class HomeActivity extends BaseActivity implements TabListener,
 					frameTitle.setVisibility(View.GONE);
 					break;
 				case R.id.download:
-					startActivity(new Intent(HomeActivity.this,DownloadProgressActivity.class));
+					startActivity(new Intent(HomeActivity.this,
+							DownloadProgressActivity.class));
 					overridePendingTransition(0, 0);
 					break;
 				}
@@ -672,7 +693,7 @@ public class HomeActivity extends BaseActivity implements TabListener,
 			DialogUtils.showDialogExit(this);
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -710,21 +731,194 @@ public class HomeActivity extends BaseActivity implements TabListener,
 			setupSlidingMenu();
 		}
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch(keyCode){
+		switch (keyCode) {
 		case KeyEvent.KEYCODE_MENU:
-			if(DataUtils.SHOW_FOOTER){
+			if (DataUtils.SHOW_FOOTER) {
 				AnimationUtils.setFadeOutAnim(footer);
 				DataUtils.SHOW_FOOTER = false;
-			}else{
+			} else {
 				AnimationUtils.setFadeInAnim(footer);
 				DataUtils.SHOW_FOOTER = true;
 			}
 			break;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	private class GetDeviceToken extends AsyncTask<Void, Void, Void> {
+
+		boolean isConnected;
+		GoogleCloudMessaging gcm;
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			if (isConnected) {
+				if (SharePreferenceUtils.getDeviceToken(HomeActivity.this)
+						.isEmpty()) {
+					try {
+						/*GCMRegistrar.checkDevice(HomeActivity.this);
+						GCMRegistrar.checkManifest(HomeActivity.this);
+						String regID = GCMRegistrar
+								.getRegistrationId(HomeActivity.this);
+						if (regID.equals("")) {
+							GCMRegistrar.register(HomeActivity.this,
+									DataUtils.GCM_PROJECT_ID);
+						} else {
+							
+							 * SharePreferenceUtils
+							 * .putDeviceToken(HomeActivity.this, regID);
+							 
+							DataUtils.DEVICE_TOKEN = regID;
+							if (!GCMRegistrar.isRegistered(HomeActivity.this)) {
+								GCMRegistrar.setRegisteredOnServer(
+										HomeActivity.this, true);
+							}
+						}*/
+						gcm = GoogleCloudMessaging.getInstance(HomeActivity.this);
+						gcm.register(DataUtils.GCM_PROJECT_ID);
+						DataUtils.DEVICE_TOKEN = GCMRegistrar.getRegistrationId(HomeActivity.this);
+						
+					} catch (Exception e) {
+					}
+				}
+			} else {
+
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+
+			// makeToast(SharePreferenceUtils.getDeviceToken(HomeActivity.this));
+			DisplayUtils.log(SharePreferenceUtils
+					.getDeviceToken(HomeActivity.this));
+			/*
+			 * if(DataUtils.DEVICE_TOKEN.equals("")){ new
+			 * GetDeviceToken().execute(); }else{ sendDeviceToken(); }
+			 */
+			if (GCMRegistrar.getRegistrationId(HomeActivity.this).isEmpty()) {
+				new GetDeviceToken().execute();
+			} else {
+				sendDeviceToken();
+			}
+		}
+
+		@Override
+		protected void onPreExecute() {
+			if (d == null) {
+				d = ProgressDialog
+						.show(HomeActivity.this, "", "Registering...");
+			}
+			isConnected = ServiceConnection.checkConnection(HomeActivity.this);
+		}
+
+	}
+
+	/*
+	 * @SuppressWarnings({ "deprecation" }) private static void
+	 * generateNotification(Context context, String message) { int icon =
+	 * R.drawable.ic_launcher; long when = System.currentTimeMillis();
+	 * NotificationManager notificationManager = (NotificationManager) context
+	 * .getSystemService(Context.NOTIFICATION_SERVICE); Notification
+	 * notification = new Notification(icon, message, when); String title =
+	 * context.getString(R.string.app_name); Intent notificationIntent = new
+	 * Intent(context, HomeActivity.class);
+	 * notificationIntent.putExtra("command", "CLEAR"); PendingIntent intent =
+	 * PendingIntent.getActivity(context, 0, notificationIntent, 0);
+	 * notification.setLatestEventInfo(context, title, message, intent);
+	 * notification.flags |= Notification.FLAG_AUTO_CANCEL; // Play default
+	 * notification sound notification.defaults |= Notification.DEFAULT_SOUND;
+	 * // Vibrate if vibrate is enabled //notification.defaults |=
+	 * Notification.DEFAULT_VIBRATE; notificationManager.notify(0,
+	 * notification);
+	 * 
+	 * }
+	 */
+
+	private void sendDeviceToken() {
+		AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+
+			@Override
+			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+				if (d != null) {
+					d.dismiss();
+					d = null;
+				}
+				makeToast(new String(arg2) + " "
+						+ GCMRegistrar.getRegistrationId(HomeActivity.this));
+			}
+
+			@Override
+			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+					Throwable arg3) {
+				if (d != null) {
+					d.dismiss();
+					d = null;
+				}
+				makeToast("Lỗi kết nối");
+			}
+		};
+		ServiceConnection.sendDeviceToken(DataUtils.DEVICE_TOKEN, handler);
+	}
+	
+	/*private class UnregisterGCM extends AsyncTask<Void, Void, Void>{
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			if (!SharePreferenceUtils.getDeviceToken(HomeActivity.this)
+					.isEmpty()) {
+				try {
+					GCMRegistrar.checkDevice(HomeActivity.this);
+					GCMRegistrar.checkManifest(HomeActivity.this);
+					String regID = GCMRegistrar
+							.getRegistrationId(HomeActivity.this);
+					
+					if(GCMRegistrar.isRegisteredOnServer(HomeActivity.this)){
+						GCMRegistrar.unregister(HomeActivity.this);
+						GCMRegistrar.setRegisteredOnServer(HomeActivity.this, false);
+					}
+				} catch (Exception e) {
+				}
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			if(d!=null){
+				d.dismiss();
+				d=null;
+			}
+			makeToast(Boolean.toString(GCMRegistrar.isRegisteredOnServer(HomeActivity.this)));
+		}
+
+		@Override
+		protected void onPreExecute() {
+			if (d == null) {
+				d = ProgressDialog
+						.show(HomeActivity.this, "", "Registering...");
+			}
+		}
+		
+	}*/
+	
+	private boolean checkPlayServices() {
+	    int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+	    if (resultCode != ConnectionResult.SUCCESS) {
+	        if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+	            GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+	                    9000).show();
+	        } else {
+	            Log.i("GCM", "This device is not supported.");
+	            finish();
+	        }
+	        return false;
+	    }
+	    return true;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.maihoangonline.utils;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
@@ -22,7 +23,7 @@ public class ModelDataUtils {
 		for (Element src : media) {
 			if (src.tagName().equals("img")) {
 				listPicture.add("http://mobile.mho.vn/" + src.attr("src"));
-				
+
 			}
 
 		}
@@ -34,19 +35,19 @@ public class ModelDataUtils {
 		Document doc = Jsoup.parse(news.getContent());
 		Elements media = doc.select("[src]");
 		for (Element src : media) {
-			if (src.tagName().equals("img")||src.tagName().endsWith("iframe")) {
+			if (src.tagName().equals("img") || src.tagName().endsWith("iframe")) {
 				listPicture.add(src.attr("src"));
 				src.attr("width", Integer.toString(screenWidth));
-				if(src.tagName().endsWith("iframe")){
+				if (src.tagName().endsWith("iframe")) {
 					src.attr("height", "300");
 				}
-				//src.attr("height", "50");
+				// src.attr("height", "50");
 			}
 
 		}
-		DisplayUtils.log("AFTER = "+doc.toString());
+		DisplayUtils.log("AFTER = " + doc.toString());
 		return doc.toString();
-		
+
 	}
 
 	public static ArrayList<String> getListFileName(ArrayList<String> listURL) {
@@ -93,6 +94,23 @@ public class ModelDataUtils {
 				paramInt1, paramInt2);
 		localOptions.inJustDecodeBounds = false;
 		return BitmapFactory.decodeFile(paramString, localOptions);
+	}
+
+	public static String md5(String message) {
+		String digest = null;
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] hash = md.digest(message.getBytes("UTF-8"));
+			StringBuilder sb = new StringBuilder(2 * hash.length);
+			for (byte b : hash) {
+				sb.append(String.format("%02x", b & 0xff));
+			}
+			digest = sb.toString();
+
+		} catch (Exception e) {
+
+		}
+		return digest;
 	}
 
 }

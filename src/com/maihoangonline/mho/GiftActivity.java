@@ -1,6 +1,8 @@
 package com.maihoangonline.mho;
 
 import java.util.ArrayList;
+
+import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,7 +10,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.util.DisplayMetrics;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.costum.android.widget.LoadMoreListView;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.maihoangonline.adapter.ListGameAdapter;
 import com.maihoangonline.models.Game;
 import com.maihoangonline.utils.DataUtils;
@@ -31,6 +33,7 @@ public class GiftActivity extends BaseActivity implements OnClickListener {
 	private ArrayList<Game> listGameGift = new ArrayList<Game>();
 	private ListGameAdapter giftAdapter;
 	private ActionBar bar;
+	private ProgressDialog d;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,8 @@ public class GiftActivity extends BaseActivity implements OnClickListener {
 		setContentView(R.layout.activity_gift);
 		setupActionBar();
 		setupView();
-		new GetPublicGift().execute();
+		//new GetPublicGift().execute();
+		getPublicGift();
 	}
 
 	private void setupView() {
@@ -115,8 +119,70 @@ public class GiftActivity extends BaseActivity implements OnClickListener {
 			break;
 		}
 	}
+	
+	private void getPublicGift(){
+		d = ProgressDialog.show(GiftActivity.this, "",
+				"Đang tải danh sách quà tặng");
+		JsonHttpResponseHandler handler = new JsonHttpResponseHandler(){
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONObject errorResponse) {
+				makeToast("Lỗi kết nối");
+				if(d!=null){
+					d.dismiss();
+					d=null;
+				}
+				super.onFailure(statusCode, headers, throwable, errorResponse);
+			}
 
-	private class GetPublicGift extends AsyncTask<Void, Void, Void> {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+				super.onSuccess(statusCode, headers, response);
+				JSONObject jsonListGift = response;
+				try {
+					JSONArray arrayGame = jsonListGift.getJSONArray("DataList");
+					for (int i = 0; i < arrayGame.length(); i++) {
+						JSONObject gameItem = arrayGame.getJSONObject(i);
+						Game game = new Game();
+						game.setId(gameItem.getInt("Id"));
+						game.setTitle(gameItem.getString("Title"));
+						game.setIdGroup(gameItem.getInt("IdGroup"));
+						game.setIdSystem(gameItem.getInt("IdSystem"));
+						game.setPicture(gameItem.getString("Picture"));
+						game.setPictureAlbum(gameItem.getString("PictureAlbum"));
+						game.setDes(gameItem.getString("Des"));
+						game.setDetail(gameItem.getString("Detail"));
+						game.setIdCategoryGame(gameItem.getInt("IdCategoryGame"));
+						game.setHotGame(gameItem.getBoolean("HotGame"));
+						game.setNewGame(gameItem.getBoolean("NewGame"));
+						game.setFile(gameItem.getString("File"));
+						game.setDownload(gameItem.getInt("Download"));
+						game.setRate(gameItem.getInt("Rate"));
+						game.setVersion(gameItem.getString("Version"));
+						game.setSize(gameItem.getString("Size"));
+						game.setView(gameItem.getInt("View"));
+						game.setFreeGame(gameItem.getBoolean("FreeGame"));
+						listGameGift.add(game);
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				giftAdapter.notifyDataSetChanged();
+				lvGift.onLoadMoreComplete();
+				if (d != null) {
+					d.dismiss();
+					d = null;
+				}
+			}
+			
+		};
+		ServiceConnection.getPublicGift(handler);
+	}
+
+	/*private class GetPublicGift extends AsyncTask<Void, Void, Void> {
 
 		ProgressDialog d;
 		JSONObject jsonListGift;
@@ -173,5 +239,5 @@ public class GiftActivity extends BaseActivity implements OnClickListener {
 					"Đang tải danh sách quà tặng");
 		}
 
-	}
+	}*/
 }

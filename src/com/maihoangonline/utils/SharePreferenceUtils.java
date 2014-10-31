@@ -129,16 +129,31 @@ public class SharePreferenceUtils {
 					Context.MODE_PRIVATE).getInt("tk3", 0);
 		}
 	}
-	
-	public static void putProgressDownload(Context c, Game game, int progress){
-		SharedPreferences pref = c.getSharedPreferences(DataUtils.PREF_DOWNLOAD, Context.MODE_PRIVATE);
+
+	public static void putProgressDownload(Context c, Game game, int progress) {
+		SharedPreferences pref = c.getSharedPreferences(
+				DataUtils.PREF_DOWNLOAD, Context.MODE_PRIVATE);
 		Editor e = pref.edit();
 		e.putInt(game.getTitle(), progress);
 		e.commit();
 	}
-	
-	public static int getProgressDownload(Context c, Game game){
-		return c.getSharedPreferences(DataUtils.PREF_DOWNLOAD, Context.MODE_PRIVATE).getInt(game.getTitle(), -1);
+
+	public static int getProgressDownload(Context c, Game game) {
+		return c.getSharedPreferences(DataUtils.PREF_DOWNLOAD,
+				Context.MODE_PRIVATE).getInt(game.getTitle(), -1);
+	}
+
+	public static void putDeviceToken(Context c, String token) {
+		SharedPreferences pref = c.getSharedPreferences(DataUtils.PREF_LOGGING,
+				Context.MODE_PRIVATE);
+		Editor e = pref.edit();
+		e.putString("token", token);
+		e.commit();
+	}
+
+	public static String getDeviceToken(Context c) {
+		return c.getSharedPreferences(DataUtils.PREF_LOGGING,
+				Context.MODE_PRIVATE).getString("token", "");
 	}
 
 }

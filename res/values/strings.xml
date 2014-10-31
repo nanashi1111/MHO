@@ -18,5 +18,11 @@
     <string name="app_id">539331289516926</string>
     <string name="top_game">TOP GAME</string>
     <string name="top_app">TOP APP</string>
+    <string name="pay_gold">Nạp tiền</string>
+    <string name="serial">Số serial</string>
+    <string name="code">Mã thẻ cào</string>
+    <string name="transfer_gold">Chuyển tiền</string>
+    <string name="to_user">Id hoặc Email người nhận</string>
+    <string name="gold_transfer">Số lượng gold</string>
 
 </resources>
