@@ -1,7 +1,6 @@
 package com.maihoangonline.utils;
 
 import com.maihoangonline.models.Game;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -154,6 +153,32 @@ public class SharePreferenceUtils {
 	public static String getDeviceToken(Context c) {
 		return c.getSharedPreferences(DataUtils.PREF_LOGGING,
 				Context.MODE_PRIVATE).getString("token", "");
+	}
+
+	public static void setFirstTime(Context c, boolean firstTime) {
+		SharedPreferences pref = c.getSharedPreferences(DataUtils.PREF_LOGGING,
+				Context.MODE_PRIVATE);
+		Editor editor = pref.edit();
+		editor.putBoolean("first_time", firstTime);
+		editor.commit();
+	}
+
+	public static boolean getFirstTime(Context c) {
+		return c.getSharedPreferences(DataUtils.PREF_LOGGING,
+				Context.MODE_PRIVATE).getBoolean("first_time", true);
+	}
+
+	public static void setAppVersion(Context c, int ver) {
+		SharedPreferences pref = c.getSharedPreferences(DataUtils.PREF_LOGGING,
+				Context.MODE_PRIVATE);
+		Editor editor = pref.edit();
+		editor.putInt("version", ver);
+		editor.commit();
+	}
+
+	public static int getAppVersion(Context c) {
+		return c.getSharedPreferences(DataUtils.PREF_LOGGING,
+				Context.MODE_PRIVATE).getInt("version", -1);
 	}
 
 }

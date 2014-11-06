@@ -100,6 +100,12 @@ public class DownloadProgressActivity extends BaseActivity implements TabListene
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		DataUtils.isInDownloadScreen =true;
+	}
+	
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		DataUtils.isInDownloadScreen=false;

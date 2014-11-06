@@ -1,25 +1,16 @@
 package com.maihoangonline.mho;
 
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -43,14 +34,13 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnCloseListener;
 import android.widget.TextView;
-
-import com.google.android.gcm.GCMConstants;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.maihoangonline.adapter.HomePagerAdapter;
 import com.maihoangonline.adapter.ListOptionAdapter;
 import com.maihoangonline.fragments.GameReviewFragment;
@@ -75,6 +65,7 @@ public class HomeActivity extends BaseActivity implements TabListener,
 	private Button btTopic, btOther, btRank, btCategory;
 	private LinearLayout footer;
 	private ProgressDialog d;
+	private int version;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,12 +84,13 @@ public class HomeActivity extends BaseActivity implements TabListener,
 		setupActionBar();
 		setupView();
 		DataUtils.activityList.add(this);
-		if (SharePreferenceUtils.getDeviceToken(this).equals("")) {
-			if(checkPlayServices()){
-				new GetDeviceToken().execute();
-			}
-			
-		}
+		/*
+		 * if (SharePreferenceUtils.getDeviceToken(this).equals("")) {
+		 * if(checkPlayServices()){ new GetDeviceToken().execute(); }
+		 * 
+		 * }
+		 */
+		getIpWan();
 	}
 
 	private void setupView() {
@@ -291,57 +283,58 @@ public class HomeActivity extends BaseActivity implements TabListener,
 					overridePendingTransition(0, 0);
 					break;
 				case 4:
-					new GetIPWan().execute();
+					// new GetIPWan().execute();
 					break;
 				case 5:
-					//new UnregisterGCM().execute();
+					// new UnregisterGCM().execute();
 					break;
 				}
 			}
 		});
 	}
 
-	private class GetIPWan extends AsyncTask<Void, Void, Void> {
+	/*
+	 * private class GetIPWan extends AsyncTask<Void, Void, Void> {
+	 * 
+	 * ProgressDialog d; BufferedReader bReader; String sms;
+	 * 
+	 * @Override protected Void doInBackground(Void... arg0) { URL url; try {
+	 * url = new URL("http://checkip.amazonaws.com/"); HttpURLConnection con =
+	 * (HttpURLConnection) url .openConnection(); InputStream is =
+	 * con.getInputStream(); InputStreamReader reader = new
+	 * InputStreamReader(is); bReader = new BufferedReader(reader); sms =
+	 * bReader == null ? "Null" : bReader.readLine(); DisplayUtils.log(sms);
+	 * 
+	 * } catch (MalformedURLException e1) { e1.printStackTrace(); } catch
+	 * (IOException e) { e.printStackTrace(); } return null; }
+	 * 
+	 * @Override protected void onPostExecute(Void result) { if (d != null) {
+	 * d.dismiss(); d = null; } makeToast("Ip wan:" + sms); }
+	 * 
+	 * @Override protected void onPreExecute() { d =
+	 * ProgressDialog.show(HomeActivity.this, "", "Getting WAN IP"); }
+	 * 
+	 * }
+	 */
 
-		ProgressDialog d;
-		BufferedReader bReader;
-		String sms;
+	private void getIpWan() {
+		AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
 
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			URL url;
-			try {
-				url = new URL("http://checkip.amazonaws.com/");
-				HttpURLConnection con = (HttpURLConnection) url
-						.openConnection();
-				InputStream is = con.getInputStream();
-				InputStreamReader reader = new InputStreamReader(is);
-				bReader = new BufferedReader(reader);
-				sms = bReader == null ? "Null" : bReader.readLine();
-				DisplayUtils.log(sms);
-
-			} catch (MalformedURLException e1) {
-				e1.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			@Override
+			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+				((TextView) menu.findViewById(R.id.ip_wan)).setText("Ip wan:"
+						+ new String(arg2));
+				checkUpdate();
 			}
-			return null;
-		}
 
-		@Override
-		protected void onPostExecute(Void result) {
-			if (d != null) {
-				d.dismiss();
-				d = null;
+			@Override
+			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+					Throwable arg3) {
+				// makeToast("Lỗi kết nối");
+				checkUpdate();
 			}
-			makeToast("Ip wan:" + sms);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			d = ProgressDialog.show(HomeActivity.this, "", "Getting WAN IP");
-		}
-
+		};
+		ServiceConnection.getIpWan(handler);
 	}
 
 	private void setupActionBar() {
@@ -589,8 +582,11 @@ public class HomeActivity extends BaseActivity implements TabListener,
 				if (DataUtils.isInErrCode(ret)) {
 					// Put logged info
 					SharePreferenceUtils.putLogInfo(HomeActivity.this, false);
-
 					showDialogRespose(false);
+					if (dialog != null) {
+						dialog.dismiss();
+						dialog = null;
+					}
 				} else {
 					// Put logged info
 					SharePreferenceUtils.putLogInfo(HomeActivity.this, true);
@@ -603,8 +599,9 @@ public class HomeActivity extends BaseActivity implements TabListener,
 							requestToken);
 					SharePreferenceUtils.putAccEmail(HomeActivity.this,
 							AccEmail);
-					new LoadUserInfo().execute();
+					// new LoadUserInfo().execute();
 					// showDialogRespose(true);
+					getAccInfo();
 				}
 			} catch (JSONException e) {
 
@@ -614,43 +611,71 @@ public class HomeActivity extends BaseActivity implements TabListener,
 
 	}
 
-	private class LoadUserInfo extends AsyncTask<Void, Void, Void> {
+	/*
+	 * private class LoadUserInfo extends AsyncTask<Void, Void, Void> {
+	 * 
+	 * JSONObject o;
+	 * 
+	 * @Override protected Void doInBackground(Void... params) { o =
+	 * ServiceConnection.getUserInfo(
+	 * SharePreferenceUtils.getAccEmail(HomeActivity.this) + "",
+	 * SharePreferenceUtils.getrequestToken(HomeActivity.this)); return null; }
+	 * 
+	 * @Override protected void onPostExecute(Void result) {
+	 * DisplayUtils.log(o.toString()); try { int tk1 = o.getInt("TK1"); int tk2
+	 * = o.getInt("TK2"); int tk3 = o.getInt("TK3");
+	 * SharePreferenceUtils.putGoldInfo(HomeActivity.this, tk1, tk2, tk3); }
+	 * catch (JSONException e) {
+	 * 
+	 * e.printStackTrace(); } if (dialog != null) { dialog.dismiss(); dialog =
+	 * null; } showDialogRespose(true); }
+	 * 
+	 * @Override protected void onPreExecute() {
+	 * 
+	 * }
+	 * 
+	 * }
+	 */
 
-		JSONObject o;
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			o = ServiceConnection.getUserInfo(
-					SharePreferenceUtils.getAccEmail(HomeActivity.this) + "",
-					SharePreferenceUtils.getrequestToken(HomeActivity.this));
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			DisplayUtils.log(o.toString());
-			try {
-				int tk1 = o.getInt("TK1");
-				int tk2 = o.getInt("TK2");
-				int tk3 = o.getInt("TK3");
-				SharePreferenceUtils.putGoldInfo(HomeActivity.this, tk1, tk2,
-						tk3);
-			} catch (JSONException e) {
-
-				e.printStackTrace();
+	private void getAccInfo() {
+		JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONObject errorResponse) {
+				makeToast("Lỗi kết nối");
+				if (dialog != null) {
+					dialog.dismiss();
+					dialog = null;
+				}
+				super.onFailure(statusCode, headers, throwable, errorResponse);
 			}
-			if (dialog != null) {
-				dialog.dismiss();
-				dialog = null;
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+				JSONObject o = response;
+				if (dialog != null) {
+					dialog.dismiss();
+					dialog = null;
+				}
+				try {
+					int tk1 = o.getInt("TK1");
+					int tk2 = o.getInt("TK2");
+					int tk3 = o.getInt("TK3");
+					SharePreferenceUtils.putGoldInfo(HomeActivity.this, tk1,
+							tk2, tk3);
+				} catch (JSONException e) {
+
+					e.printStackTrace();
+				}
+				DisplayUtils.log(response.toString());
+				showDialogRespose(true);
+				super.onSuccess(statusCode, headers, response);
 			}
-			showDialogRespose(true);
-		}
 
-		@Override
-		protected void onPreExecute() {
-
-		}
-
+		};
+		ServiceConnection.getAccInfo(SharePreferenceUtils.getAccEmail(this),
+				handler);
 	}
 
 	private void showDialogRespose(final boolean success) {
@@ -692,6 +717,7 @@ public class HomeActivity extends BaseActivity implements TabListener,
 		} else {
 			DialogUtils.showDialogExit(this);
 		}
+
 	}
 
 	@Override
@@ -759,28 +785,29 @@ public class HomeActivity extends BaseActivity implements TabListener,
 				if (SharePreferenceUtils.getDeviceToken(HomeActivity.this)
 						.isEmpty()) {
 					try {
-						/*GCMRegistrar.checkDevice(HomeActivity.this);
-						GCMRegistrar.checkManifest(HomeActivity.this);
-						String regID = GCMRegistrar
-								.getRegistrationId(HomeActivity.this);
-						if (regID.equals("")) {
-							GCMRegistrar.register(HomeActivity.this,
-									DataUtils.GCM_PROJECT_ID);
-						} else {
-							
-							 * SharePreferenceUtils
-							 * .putDeviceToken(HomeActivity.this, regID);
-							 
-							DataUtils.DEVICE_TOKEN = regID;
-							if (!GCMRegistrar.isRegistered(HomeActivity.this)) {
-								GCMRegistrar.setRegisteredOnServer(
-										HomeActivity.this, true);
-							}
-						}*/
-						gcm = GoogleCloudMessaging.getInstance(HomeActivity.this);
+						/*
+						 * GCMRegistrar.checkDevice(HomeActivity.this);
+						 * GCMRegistrar.checkManifest(HomeActivity.this); String
+						 * regID = GCMRegistrar
+						 * .getRegistrationId(HomeActivity.this); if
+						 * (regID.equals("")) {
+						 * GCMRegistrar.register(HomeActivity.this,
+						 * DataUtils.GCM_PROJECT_ID); } else {
+						 * 
+						 * SharePreferenceUtils
+						 * .putDeviceToken(HomeActivity.this, regID);
+						 * 
+						 * DataUtils.DEVICE_TOKEN = regID; if
+						 * (!GCMRegistrar.isRegistered(HomeActivity.this)) {
+						 * GCMRegistrar.setRegisteredOnServer(
+						 * HomeActivity.this, true); } }
+						 */
+						gcm = GoogleCloudMessaging
+								.getInstance(HomeActivity.this);
 						gcm.register(DataUtils.GCM_PROJECT_ID);
-						DataUtils.DEVICE_TOKEN = GCMRegistrar.getRegistrationId(HomeActivity.this);
-						
+						DataUtils.DEVICE_TOKEN = GCMRegistrar
+								.getRegistrationId(HomeActivity.this);
+
 					} catch (Exception e) {
 					}
 				}
@@ -864,61 +891,182 @@ public class HomeActivity extends BaseActivity implements TabListener,
 		};
 		ServiceConnection.sendDeviceToken(DataUtils.DEVICE_TOKEN, handler);
 	}
-	
-	/*private class UnregisterGCM extends AsyncTask<Void, Void, Void>{
+
+	/*
+	 * private class UnregisterGCM extends AsyncTask<Void, Void, Void>{
+	 * 
+	 * @Override protected Void doInBackground(Void... params) { if
+	 * (!SharePreferenceUtils.getDeviceToken(HomeActivity.this) .isEmpty()) {
+	 * try { GCMRegistrar.checkDevice(HomeActivity.this);
+	 * GCMRegistrar.checkManifest(HomeActivity.this); String regID =
+	 * GCMRegistrar .getRegistrationId(HomeActivity.this);
+	 * 
+	 * if(GCMRegistrar.isRegisteredOnServer(HomeActivity.this)){
+	 * GCMRegistrar.unregister(HomeActivity.this);
+	 * GCMRegistrar.setRegisteredOnServer(HomeActivity.this, false); } } catch
+	 * (Exception e) { } } return null; }
+	 * 
+	 * @Override protected void onPostExecute(Void result) { if(d!=null){
+	 * d.dismiss(); d=null; }
+	 * makeToast(Boolean.toString(GCMRegistrar.isRegisteredOnServer
+	 * (HomeActivity.this))); }
+	 * 
+	 * @Override protected void onPreExecute() { if (d == null) { d =
+	 * ProgressDialog .show(HomeActivity.this, "", "Registering..."); } }
+	 * 
+	 * }
+	 */
+
+	private boolean checkPlayServices() {
+		int resultCode = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(this);
+		if (resultCode != ConnectionResult.SUCCESS) {
+			if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+				GooglePlayServicesUtil.getErrorDialog(resultCode, this, 9000)
+						.show();
+			} else {
+				makeToast("This device is not supported GCM");
+				Log.i("GCM", "This device is not supported.");
+				finish();
+			}
+			return false;
+		}
+		return true;
+	}
+
+	private void checkUpdate() {
+		final boolean firstTime = SharePreferenceUtils.getFirstTime(this);
+		JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONObject errorResponse) {
+				makeToast("Lỗi kết nối");
+				if (SharePreferenceUtils.getDeviceToken(HomeActivity.this)
+						.equals("")) {
+					if (checkPlayServices()) {
+						new GetDeviceToken().execute();
+					}
+
+				}
+				super.onFailure(statusCode, headers, throwable, errorResponse);
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+				try {
+					version = response.getInt("Version");
+					String link = response.getString("Link");
+					if (firstTime) {
+						SharePreferenceUtils.setAppVersion(HomeActivity.this,
+								version);
+						SharePreferenceUtils.setFirstTime(HomeActivity.this,
+								false);
+					} else {
+						int oldVersion = SharePreferenceUtils
+								.getAppVersion(HomeActivity.this);
+						if (oldVersion < version) {
+							showDialogUpdate(link);
+						}
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (SharePreferenceUtils.getDeviceToken(HomeActivity.this)
+						.equals("")) {
+					if (checkPlayServices()) {
+						new GetDeviceToken().execute();
+					}
+
+				}
+				super.onSuccess(statusCode, headers, response);
+			}
+
+		};
+
+		ServiceConnection.getUpdateInfo(handler);
+	}
+
+	private void showDialogUpdate(final String linkDownload) {
+		new AlertDialog.Builder(this)
+				.setMessage(
+						"Đã có bản cập nhật mới, bạn có muốn cấp nhật không?")
+				.setTitle("Cập nhật")
+				.setNegativeButton("Có", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						new DownloadNewVersionTask().execute(linkDownload);
+					}
+				})
+				.setNeutralButton("Không",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+
+							}
+						}).setCancelable(true).show();
+	}
+
+	private class DownloadNewVersionTask extends AsyncTask<String, Void, Void> {
 
 		@Override
-		protected Void doInBackground(Void... params) {
-			if (!SharePreferenceUtils.getDeviceToken(HomeActivity.this)
-					.isEmpty()) {
-				try {
-					GCMRegistrar.checkDevice(HomeActivity.this);
-					GCMRegistrar.checkManifest(HomeActivity.this);
-					String regID = GCMRegistrar
-							.getRegistrationId(HomeActivity.this);
-					
-					if(GCMRegistrar.isRegisteredOnServer(HomeActivity.this)){
-						GCMRegistrar.unregister(HomeActivity.this);
-						GCMRegistrar.setRegisteredOnServer(HomeActivity.this, false);
-					}
-				} catch (Exception e) {
-				}
-			}
+		protected Void doInBackground(String... params) {
+			ServiceConnection
+					.download(params[0], DataUtils.PATH_APP, "MHO.apk");
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-			if(d!=null){
+			if (d != null) {
 				d.dismiss();
-				d=null;
+				d = null;
 			}
-			makeToast(Boolean.toString(GCMRegistrar.isRegisteredOnServer(HomeActivity.this)));
+			showDialogInstall();
+
 		}
 
 		@Override
 		protected void onPreExecute() {
-			if (d == null) {
-				d = ProgressDialog
-						.show(HomeActivity.this, "", "Registering...");
-			}
+			d = ProgressDialog.show(HomeActivity.this, "",
+					"Đang tải phiên bản cập nhật...");
 		}
-		
-	}*/
-	
-	private boolean checkPlayServices() {
-	    int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-	    if (resultCode != ConnectionResult.SUCCESS) {
-	        if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-	            GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-	                    9000).show();
-	        } else {
-	            Log.i("GCM", "This device is not supported.");
-	            finish();
-	        }
-	        return false;
-	    }
-	    return true;
+
+	}
+
+	private void showDialogInstall() {
+		new AlertDialog.Builder(this)
+				.setMessage(
+						"Đã tải xong bản cập nhật mới, bạn có muốn cài đặt không?")
+				.setTitle("Cập nhật")
+				.setNegativeButton("Có", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Intent i = new Intent(Intent.ACTION_VIEW);
+						i.setDataAndType(
+								Uri.fromFile(new File(DataUtils.PATH_APP + "/"
+										+ "MHO" + ".apk")),
+								"application/vnd.android.package-archive");
+						startActivity(i);
+						SharePreferenceUtils.setAppVersion(HomeActivity.this,
+								version);
+						finish();
+					}
+				})
+				.setNeutralButton("Không",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+
+							}
+						}).setCancelable(true).show();
 	}
 
 }

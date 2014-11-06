@@ -5,7 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-
+import android.widget.Toast;
 import com.google.android.gcm.GCMBaseIntentService;
 import com.maihoangonline.utils.DataUtils;
 import com.maihoangonline.utils.DisplayUtils;
@@ -19,12 +19,30 @@ public class GCMIntentService extends GCMBaseIntentService{
 
 	@Override
 	protected void onError(Context arg0, String arg1) {
-		
+		Toast.makeText(arg0, "Error:"+arg1, Toast.LENGTH_LONG).show();
 	}
 
 	@Override
 	protected void onMessage(Context arg0, Intent arg1) {
-		generateNotification(arg0, "Notification");
+		//generateNotification(arg0, "Notification");
+		String jsonMsg = arg1.getStringExtra("message");
+		DisplayUtils.log(jsonMsg);
+		generateNotification(arg0, jsonMsg);
+		/*try {
+			JSONObject json = new JSONObject(jsonMsg);
+			//Toast.makeText(arg0, jsonMsg, Toast.LENGTH_LONG).show();
+			DisplayUtils.log(jsonMsg);
+			String msg = json.getString("Name");
+			if(msg==null||msg.isEmpty()){
+				msg = "Đã có bản cập nhật mới";
+			}
+			generateNotification(arg0, msg);
+			Toast.makeText(arg0, jsonMsg, Toast.LENGTH_LONG).show();
+			DisplayUtils.log(jsonMsg);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}*/
+		
 	}
 
 	@Override
@@ -41,7 +59,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 	
 	@SuppressWarnings({ "deprecation" })
 	private static void generateNotification(Context context, String message) {
-		int icon = R.drawable.ic_launcher;
+		int icon = R.drawable.app_icon;
 		long when = System.currentTimeMillis();
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);

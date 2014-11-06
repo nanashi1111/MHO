@@ -6,8 +6,10 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.View;
@@ -20,7 +22,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.maihoangonline.adapter.ListCardTypeAdapter;
 import com.maihoangonline.utils.DisplayUtils;
@@ -52,6 +53,8 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 		findViewById(R.id.pay_view).setOnClickListener(this);
 		findViewById(R.id.transfer_view).setOnClickListener(this);
 		findViewById(R.id.get_acc_info_view).setOnClickListener(this);
+		findViewById(R.id.history_view).setOnClickListener(this);
+		findViewById(R.id.remain_bill_view).setOnClickListener(this);
 	}
 
 	private void setupActionBar() {
@@ -73,7 +76,8 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void loadData() {
-		tvUserName.setText(SharePreferenceUtils.getAccEmail(this));
+		tvUserName
+				.setText("Xin chào " + SharePreferenceUtils.getAccEmail(this));
 		tvMain.setText("TK Chính:" + SharePreferenceUtils.getGold(this, 1)
 				+ " gold");
 		tvPromotion1.setText("TK KM1:" + SharePreferenceUtils.getGold(this, 2)
@@ -101,9 +105,35 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 			showDialogTransferGold();
 			break;
 		case R.id.get_acc_info_view:
-			getAccInfo();
+			// getAccInfo(true);
+			showDialogAccInfo();
 			break;
+		case R.id.history_view:
+			getHistory();
+			break;
+		case R.id.remain_bill_view:
+			getAccInfo(false);
+			break;
+
 		}
+	}
+
+	private void showDialogAccInfo() {
+		new AlertDialog.Builder(this)
+				.setTitle("Thông tin tài khoản")
+				.setMessage(
+						"Họ tên: chưa cập nhật\n" + "Email: "
+								+ SharePreferenceUtils.getAccEmail(this)
+								+ "\nSố tài khoản: "
+								+ SharePreferenceUtils.getAccID(this)
+								+ "\nSố điện thoại: Chưa cập nhật")
+				.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+
+					}
+				}).setCancelable(true).show();
 	}
 
 	private void showDialogPayGold() {
@@ -125,10 +155,10 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
-				if (arg2 < 2) {
-					typeCard = arg2;
-				} else {
+				if (arg2 <= 2) {
 					typeCard = arg2 + 1;
+				} else {
+					typeCard = arg2 + 2;
 				}
 			}
 
@@ -151,12 +181,12 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 			public void onClick(View v) {
 				String code = etCode.getText().toString();
 				if (code.isEmpty()) {
-					etCode.setError("Bạn hãy nhập tên đăng nhập...");
+					etCode.setError("Bạn hãy nhập mã thẻ...");
 					return;
 				}
 				String serial = etSerial.getText().toString();
 				if (serial.isEmpty()) {
-					etSerial.setError("Bạn chưa nhập mật khẩu...");
+					etSerial.setError("Bạn chưa nhập số serial...");
 					return;
 				}
 				dialogPay.dismiss();
@@ -171,6 +201,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void pay(int typeCard, String code, String serial, int accID) {
+		DisplayUtils.log("TypeCard=" + typeCard);
 		d = ProgressDialog.show(this, "", "Đang nạp gold...");
 		JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
 			@Override
@@ -197,16 +228,17 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 				} else {
 					makeToast("Null");
 				}
-				if (d != null) {
-					d.dismiss();
-					d = null;
-				}
+				/*
+				 * if (d != null) { d.dismiss(); d = null; }
+				 */
 				super.onSuccess(statusCode, headers, response);
+				getAccInfo(true);
 			}
 
 		};
 
 		ServiceConnection.payGold(typeCard, code, serial, accID, handler);
+
 	}
 
 	private void showDialogTransferGold() {
@@ -273,11 +305,12 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 				} else {
 					makeToast("Null");
 				}
-				if (d != null) {
+				/*if (d != null) {
 					d.dismiss();
 					d = null;
-				}
+				}*/
 				super.onSuccess(statusCode, headers, response);
+				getAccInfo(true);
 			}
 
 		};
@@ -286,8 +319,15 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 				password, toUser, gold, handler);
 	}
 
-	private void getAccInfo() {
-		d = ProgressDialog.show(this, "", "Đang lấy thông tin tài khoản...");
+	private void getAccInfo(final boolean isAfterPay) {
+		/*
+		 * if(d==null){ d = ProgressDialog .show(this, "",
+		 * "Đang lấy thông tin tài khoản..."); }else{
+		 * d.setMessage("Đang lấy thông tin tài khoản..."); }
+		 */
+		if (!isAfterPay) {
+			d=ProgressDialog.show(this, "", "Đang lấy thông tin tài khoản...");
+		}
 		JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
 			@Override
 			public void onFailure(int statusCode, Header[] headers,
@@ -303,17 +343,108 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
 					JSONObject response) {
+				JSONObject o = response;
 				if (d != null) {
 					d.dismiss();
 					d = null;
 				}
+				try {
+					int tk1 = o.getInt("TK1");
+					int tk2 = o.getInt("TK2");
+					int tk3 = o.getInt("TK3");
+					SharePreferenceUtils.putGoldInfo(UserInfoActivity.this,
+							tk1, tk2, tk3);
+				} catch (JSONException e) {
+
+					e.printStackTrace();
+				}
 				DisplayUtils.log(response.toString());
+				
+				if (isAfterPay) {
+					tvMain.setText("TK Chính:"
+							+ SharePreferenceUtils.getGold(
+									UserInfoActivity.this, 1) + " gold");
+					tvPromotion1.setText("TK KM1:"
+							+ SharePreferenceUtils.getGold(
+									UserInfoActivity.this, 2) + " gold");
+					tvPromotion2.setText("TK KM2:"
+							+ SharePreferenceUtils.getGold(
+									UserInfoActivity.this, 3) + " gold");
+				}else{
+					showDialogAccBillInfo();
+				}
 				super.onSuccess(statusCode, headers, response);
 			}
 
 		};
 		ServiceConnection.getAccInfo(SharePreferenceUtils.getAccEmail(this),
 				handler);
+	}
+
+	private void showDialogAccBillInfo() {
+		final Dialog dialogInfo = new Dialog(this);
+		dialogInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialogInfo.setContentView(R.layout.dialog_user_info);
+		TextView tvEmail = (TextView) dialogInfo.findViewById(R.id.acc_email);
+		tvEmail.setText("Tài khoản:" + SharePreferenceUtils.getAccEmail(this));
+		TextView tvMainBill = (TextView) dialogInfo
+				.findViewById(R.id.main_acc_bil);
+		tvMainBill.setText("Tài khoản chính:"
+				+ SharePreferenceUtils.getGold(this, 1) + " gold");
+		TextView tvSecondary1 = (TextView) dialogInfo
+				.findViewById(R.id.secondary_acc_bil_1);
+		tvSecondary1.setText("Tài khoản khuyến mãi 1:"
+				+ SharePreferenceUtils.getGold(this, 2) + " gold");
+		TextView tvSecondary2 = (TextView) dialogInfo
+				.findViewById(R.id.secondary_acc_bil_2);
+		tvSecondary2.setText("Tài khoản khuyến mãi 2:"
+				+ SharePreferenceUtils.getGold(this, 3) + " gold");
+		Button btClose = (Button) dialogInfo.findViewById(R.id.close);
+		btClose.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				dialogInfo.dismiss();
+			}
+		});
+		dialogInfo.setCancelable(true);
+		dialogInfo.show();
+	}
+
+	private void getHistory() {
+		d = ProgressDialog.show(this, "", "Đang lấy lịch sử giao dịch...");
+		JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONObject errorResponse) {
+				makeToast("Lỗi kết nối");
+				if (d != null) {
+					d.dismiss();
+					d = null;
+				}
+				super.onFailure(statusCode, headers, throwable, errorResponse);
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+				/*
+				 * try { makeToast(response.getString("Message")); } catch
+				 * (JSONException e) { // TODO Auto-generated catch block
+				 * e.printStackTrace(); }
+				 */
+				if (d != null) {
+					d.dismiss();
+					d = null;
+				}
+				makeToast(response.toString());
+				DisplayUtils.log("History:" + response.toString());
+				super.onSuccess(statusCode, headers, response);
+			}
+
+		};
+		ServiceConnection.getHistoryTransaction(
+				SharePreferenceUtils.getAccID(this), 5, 0, handler);
 	}
 
 }

@@ -19,7 +19,7 @@
             android:layout_marginBottom="15sp"
             android:layout_marginLeft="10sp"
             android:layout_marginTop="10sp"
-            android:text="@string/pay_gold"
+            android:text="@string/account_info"
             android:textColor="@color/black"
             android:textSize="25sp" />
 
@@ -29,55 +29,62 @@
             android:background="@color/blue" />
     </LinearLayout>
 
-    <Spinner
-        android:id="@+id/card_type"
+    <TextView
+        android:id="@+id/acc_email"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15sp"
         android:layout_marginLeft="10sp"
         android:layout_marginRight="10sp"
-        android:layout_marginTop="15sp"
-        android:background="@drawable/edittext_login_style"
-        android:paddingBottom="5sp"
-        android:paddingTop="5sp" />
-
-    <EditText
-        android:id="@+id/card_code"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15sp"
-        android:layout_marginLeft="10sp"
-        android:layout_marginRight="10sp"
-        android:background="@drawable/edittext_login_style"
-        android:hint="@string/code"
-        android:inputType="number"
         android:paddingBottom="5sp"
         android:paddingTop="5sp"
-        android:textColorHint="@color/gray" />
+        android:textColorHint="@color/black"
+        android:textSize="15sp" />
 
-    <EditText
-        android:id="@+id/card_serial"
+    <TextView
+        android:id="@+id/main_acc_bil"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15sp"
         android:layout_marginLeft="10sp"
         android:layout_marginRight="10sp"
-        android:background="@drawable/edittext_login_style"
-        android:hint="@string/serial"
-        android:inputType="number"
         android:paddingBottom="5sp"
         android:paddingTop="5sp"
-        android:textColorHint="@color/gray" />
+        android:textColorHint="@color/black"
+        android:textSize="15sp" />
 
+    <TextView
+        android:id="@+id/secondary_acc_bil_1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:paddingBottom="5sp"
+        android:paddingTop="5sp"
+        android:textColorHint="@color/black"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/secondary_acc_bil_2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:paddingBottom="5sp"
+        android:paddingTop="5sp"
+        android:textColorHint="@color/black" />
+    
     <Button
-        android:id="@+id/pay"
+        android:id="@+id/close"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15sp"
         android:layout_marginLeft="10sp"
         android:layout_marginRight="10sp"
         android:background="@drawable/edittext_login_style"
-        android:text="@string/pay_gold"
+        android:text="@string/close"
         android:textColor="@color/black" />
 
 </LinearLayout>

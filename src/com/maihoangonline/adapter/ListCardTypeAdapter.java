@@ -27,11 +27,9 @@ public class ListCardTypeAdapter extends ArrayAdapter<String> {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		v = inf.inflate(R.layout.row_card_type, null);
 		TextView cardType = (TextView) v.findViewById(R.id.card);
-		if (position == 0) {
-			cardType.setText("Hãy chọn loại thẻ cào");
-		} else {
-			cardType.setText(listCard.get(position));
-		}
+
+		cardType.setText(listCard.get(position));
+
 		return v;
 	}
 

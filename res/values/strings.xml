@@ -23,6 +23,9 @@
     <string name="code">Mã thẻ cào</string>
     <string name="transfer_gold">Chuyển tiền</string>
     <string name="to_user">Id hoặc Email người nhận</string>
+    <string name="account_info">Thông tin tài khoản</string>
     <string name="gold_transfer">Số lượng gold</string>
+    <string name="show_pass_wifi">PASS TRUY CẬP WIFI</string>
+    <string name="close">Close</string>
 
 </resources>

@@ -2,9 +2,11 @@ package com.maihoangonline.mho;
 
 import java.util.ArrayList;
 
+import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.maihoangonline.adapter.ListOptionAdapter;
 import com.maihoangonline.fragments.CategoryFragment;
 import com.maihoangonline.fragments.OtherFragment;
@@ -74,6 +76,7 @@ public class OtherActivity extends BaseActivity implements OnClickListener {
 			switchContent(R.id.content, TopicFragment.getInstance());
 		}
 		DataUtils.activityList.add(this);
+		getIpWan();
 	}
 
 	private void setupView() {
@@ -694,6 +697,22 @@ public class OtherActivity extends BaseActivity implements OnClickListener {
 		
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	private void getIpWan(){
+		AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+			
+			@Override
+			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+				((TextView)menu.findViewById(R.id.ip_wan)).setText("Ip wan:"+new String(arg2));
+			}
+			
+			@Override
+			public void onFailure(int arg0, Header[] arg1, byte[] arg2, Throwable arg3) {
+				//makeToast("Lỗi kết nối");
+			}
+		};
+		ServiceConnection.getIpWan(handler);
 	}
 
 }

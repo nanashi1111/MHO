@@ -60,6 +60,9 @@ public class ServiceConnection {
 	private static final String URL_SEND_DEVICE_TOKEN = "http://mobile.mho.vn/services/NotificationTongBu?IdSystem=1&key=mho123190456$@!";
 	private static final String URL_TRANSFER_GOLD = "http://paygate.mho.vn/Transfer/MHOTransferGoldToUser";
 	private static final String URL_GET_ACC_INFO = "http://paygate.mho.vn/AccountInfo/GetInfo";
+	private static final String URL_GET_HISTORY_TRANSACTION = "http://paygate.mho.vn/Transfer/HistoryTransaction?pageSize=10";
+	private static final String URL_GET_IP_WAN = "http://checkip.amazonaws.com";
+	private static final String URL_UPDATE_INFO = "http://mobile.mho.vn/services/updateApp?Idsystem=5&key=mho123190456$@!";
 	// Constant
 	private static final String SERVICED = "2";
 	private static final String SERVICE_TOKEN = "757c7aa7-2c95-4f5f-910c-54c862f1b271";
@@ -370,13 +373,14 @@ public class ServiceConnection {
 		params.put("codecard", codeCard);
 		params.put("serialcard", serialCard);
 		params.put("userid", userId);
-		params.put("serviced", SERVICED);
+		params.put("serviceid", SERVICED);
 		params.put(
 				"token",
 				ModelDataUtils.md5(Integer.toString(typeCard) + codeCard
 						+ serialCard + Integer.toString(userId) + SERVICED
 						+ SERVICE_TOKEN));
 		JSONUtil.get(URL_PAY_GOLD, params, handler);
+		
 	}
 
 	public static void transferGold(int userId, String password,
@@ -386,13 +390,14 @@ public class ServiceConnection {
 		params.put("password", ModelDataUtils.md5(password));
 		params.put("toUserIdOrEmail", toUserIdOrMail);
 		params.put("goldTransfer", gold);
-		params.put("serviced", SERVICED);
+		params.put("serviceid", SERVICED);
 		params.put(
 				"token",
 				ModelDataUtils.md5(Integer.toString(userId)
 						+ ModelDataUtils.md5(password) + toUserIdOrMail
 						+ Integer.toString(gold) + SERVICED + SERVICE_TOKEN));
 		JSONUtil.get(URL_TRANSFER_GOLD, params, handler);
+		
 	}
 
 	public static void sendDeviceToken(String token,
@@ -408,13 +413,38 @@ public class ServiceConnection {
 		params.put("Email", email);
 		JSONUtil.get(URL_DELETE_THREAD, params, handler);
 	}
-	
-	public static void getAccInfo(String email, JsonHttpResponseHandler handler){
+
+	public static void getAccInfo(String email, JsonHttpResponseHandler handler) {
 		RequestParams params = new RequestParams();
 		params.put("userEmail", email);
-		params.put("serviced", SERVICED);
-		params.put("token", ModelDataUtils.md5(email+SERVICED+SERVICE_TOKEN));
+		params.put("serviceid", SERVICED);
+		params.put("token",
+				ModelDataUtils.md5(email + SERVICED + SERVICE_TOKEN));
 		JSONUtil.get(URL_GET_ACC_INFO, params, handler);
+	}
+
+	public static void getHistoryTransaction(int userId, int actionId,
+			int pageIndex, JsonHttpResponseHandler handler) {
+		RequestParams params = new RequestParams();
+		params.put("userId", userId);
+		params.put("actionId", actionId);
+		params.put("pageIndex", 0);
+		params.put("serviceid", SERVICED);
+		params.put(
+				"token",
+				ModelDataUtils.md5(Integer.toString(userId)
+						+ Integer.toString(actionId)
+						+ Integer.toString(pageIndex) + Integer.toString(10)
+						+ SERVICED + SERVICE_TOKEN));
+		JSONUtil.get(URL_GET_HISTORY_TRANSACTION, params, handler);
+	}
+
+	public static void getIpWan(AsyncHttpResponseHandler handler) {
+		JSONUtil.get(URL_GET_IP_WAN, handler);
+	}
+
+	public static void getUpdateInfo(JsonHttpResponseHandler handler) {
+		JSONUtil.get(URL_UPDATE_INFO, handler);
 	}
 
 	public static boolean checkConnection(Context context) {
@@ -439,7 +469,7 @@ public class ServiceConnection {
 		try {
 			Log.d("Downloading", link);
 			URL localURL = new URL(link);
-			File localFile2 = new File(path + fileName);
+			File localFile2 = new File(path +"/"+ fileName);
 			BufferedInputStream localBufferedInputStream = new BufferedInputStream(
 					localURL.openConnection().getInputStream());
 			ByteArrayBuffer localByteArrayBuffer = new ByteArrayBuffer(50);
