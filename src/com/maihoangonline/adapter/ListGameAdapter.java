@@ -71,6 +71,7 @@ public class ListGameAdapter extends ArrayAdapter<Game> {
 		}
 		UrlImageViewHelper.setUrlDrawable(viewHolder.ivGameLogo,
 				listGame.get(position).getPicture(),
+				//"http://mobile.mho.vn//Upload/ImgSlide/BIET%20THU2.ES1T.jpg",
 				new UrlImageViewCallback() {
 
 					@Override

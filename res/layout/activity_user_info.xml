@@ -485,6 +485,7 @@
             android:background="#ff1c1f26" />
 
         <LinearLayout
+            android:id="@+id/change_password_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"

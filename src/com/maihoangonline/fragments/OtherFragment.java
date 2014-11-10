@@ -18,7 +18,7 @@ import com.maihoangonline.utils.DataUtils;
 public class OtherFragment extends Fragment {
 
 	private View rootView;
-	private ImageView banner;
+	
 
 	public static OtherFragment INSTANCE;
 
@@ -32,6 +32,8 @@ public class OtherFragment extends Fragment {
 		}
 		return INSTANCE;
 	}
+	
+	private ImageView banner;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

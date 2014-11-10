@@ -63,6 +63,10 @@ public class ServiceConnection {
 	private static final String URL_GET_HISTORY_TRANSACTION = "http://paygate.mho.vn/Transfer/HistoryTransaction?pageSize=10";
 	private static final String URL_GET_IP_WAN = "http://checkip.amazonaws.com";
 	private static final String URL_UPDATE_INFO = "http://mobile.mho.vn/services/updateApp?Idsystem=5&key=mho123190456$@!";
+	private static final String URL_LIST_IP_WAN = "http://mobile.mho.vn/services/IpWanTongBu?key=mho123190456$@!";
+	private static final String URL_LIST_IP_PASSWORD = "http://mobile.mho.vn/services/ListCodeTongBu?key=mho123190456$@!";
+	private static final String URL_CHANGE_PASSWORD = "http://api.mho.vn/services/account?type=changepass&serviceid=200001&servicekey=BE543DBC2336";
+	private static final String URL_GET_LIST_BANNER = "http://mobile.mho.vn/services/AdvTongBu?IdSystem=2&key=mho123190456$@!";
 	// Constant
 	private static final String SERVICED = "2";
 	private static final String SERVICE_TOKEN = "757c7aa7-2c95-4f5f-910c-54c862f1b271";
@@ -380,7 +384,7 @@ public class ServiceConnection {
 						+ serialCard + Integer.toString(userId) + SERVICED
 						+ SERVICE_TOKEN));
 		JSONUtil.get(URL_PAY_GOLD, params, handler);
-		
+
 	}
 
 	public static void transferGold(int userId, String password,
@@ -397,7 +401,7 @@ public class ServiceConnection {
 						+ ModelDataUtils.md5(password) + toUserIdOrMail
 						+ Integer.toString(gold) + SERVICED + SERVICE_TOKEN));
 		JSONUtil.get(URL_TRANSFER_GOLD, params, handler);
-		
+
 	}
 
 	public static void sendDeviceToken(String token,
@@ -447,6 +451,27 @@ public class ServiceConnection {
 		JSONUtil.get(URL_UPDATE_INFO, handler);
 	}
 
+	public static void getListIpWan(JsonHttpResponseHandler handler) {
+		JSONUtil.get(URL_LIST_IP_WAN, handler);
+	}
+
+	public static void getListPassword(JsonHttpResponseHandler handler) {
+		JSONUtil.get(URL_LIST_IP_PASSWORD, handler);
+	}
+
+	public static void changePassword(int usedId, String oldPass,
+			String newPass, JsonHttpResponseHandler handler) {
+		RequestParams params = new RequestParams();
+		params.put("uid", usedId);
+		params.put("opwd", oldPass);
+		params.put("npwd", newPass);
+		JSONUtil.get(URL_CHANGE_PASSWORD, params, handler);
+	}
+
+	public static void getListBanner(JsonHttpResponseHandler handler) {
+		JSONUtil.get(URL_GET_LIST_BANNER, handler);
+	}
+
 	public static boolean checkConnection(Context context) {
 		ConnectivityManager connectivity = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -469,7 +494,7 @@ public class ServiceConnection {
 		try {
 			Log.d("Downloading", link);
 			URL localURL = new URL(link);
-			File localFile2 = new File(path +"/"+ fileName);
+			File localFile2 = new File(path + "/" + fileName);
 			BufferedInputStream localBufferedInputStream = new BufferedInputStream(
 					localURL.openConnection().getInputStream());
 			ByteArrayBuffer localByteArrayBuffer = new ByteArrayBuffer(50);

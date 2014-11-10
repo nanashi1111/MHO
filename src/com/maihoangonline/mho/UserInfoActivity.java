@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.View;
@@ -55,6 +55,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 		findViewById(R.id.get_acc_info_view).setOnClickListener(this);
 		findViewById(R.id.history_view).setOnClickListener(this);
 		findViewById(R.id.remain_bill_view).setOnClickListener(this);
+		findViewById(R.id.change_password_view).setOnClickListener(this);
 	}
 
 	private void setupActionBar() {
@@ -109,12 +110,17 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 			showDialogAccInfo();
 			break;
 		case R.id.history_view:
-			getHistory();
+			//getHistory();
+			Intent intent = new Intent(UserInfoActivity.this, ListHistoryActivity.class);
+			startActivity(intent);
+			overridePendingTransition(0, 0);
 			break;
 		case R.id.remain_bill_view:
 			getAccInfo(false);
 			break;
-
+		case R.id.change_password_view:
+			showDialogChangePassword();
+			break;
 		}
 	}
 
@@ -134,6 +140,90 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 
 					}
 				}).setCancelable(true).show();
+	}
+
+	private void showDialogChangePassword() {
+		final Dialog dialogChangePassword = new Dialog(this);
+		dialogChangePassword.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialogChangePassword.setContentView(R.layout.dialog_change_password);
+		final EditText etOldPassword = (EditText) dialogChangePassword
+				.findViewById(R.id.old_pass);
+		final EditText etNewPassword = (EditText) dialogChangePassword
+				.findViewById(R.id.new_pass);
+		final EditText etReNewPassword = (EditText) dialogChangePassword
+				.findViewById(R.id.re_new_pass);
+		Button btChangePassword = (Button) dialogChangePassword
+				.findViewById(R.id.change_password);
+		btChangePassword.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				String oldPass = etOldPassword.getText().toString();
+				if (oldPass.isEmpty()) {
+					etOldPassword.setError("Bạn chưa nhập mật khẩu cũ...");
+					return;
+				}
+				String newPass = etNewPassword.getText().toString();
+				if (newPass.isEmpty()) {
+					etNewPassword.setError("Bạn chưa nhập mật khẩu mới...");
+					return;
+				}
+				String reNewPass = etReNewPassword.getText().toString();
+				if (reNewPass.isEmpty()) {
+					etReNewPassword
+							.setError("Bạn hãy nhập lại mật khẩu mới...");
+					return;
+				}
+				if (!newPass.equals(reNewPass)) {
+					etReNewPassword.setText("");
+					etReNewPassword
+							.setError("Bạn hãy nhập chính xác mật khẩu mới...");
+					return;
+				} else {
+					dialogChangePassword.dismiss();
+					changePassword(SharePreferenceUtils
+							.getAccID(UserInfoActivity.this), oldPass, newPass);
+
+				}
+			}
+
+		});
+		dialogChangePassword.setCancelable(true);
+		dialogChangePassword.show();
+	}
+
+	private void changePassword(int userId, String oldPass, String newPass) {
+		d = ProgressDialog.show(UserInfoActivity.this, "",
+				"Đang cập nhật mật khẩu mới...");
+		JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONObject errorResponse) {
+				makeToast("Lỗi kết nối");
+				if (d != null) {
+					d.dismiss();
+					d = null;
+				}
+				super.onFailure(statusCode, headers, throwable, errorResponse);
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+				try {
+					makeToast(response.getString("Message"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (d != null) {
+					d.dismiss();
+					d = null;
+				}
+				super.onSuccess(statusCode, headers, response);
+			}
+		};
+		ServiceConnection.changePassword(userId, oldPass, newPass, handler);
 	}
 
 	private void showDialogPayGold() {
@@ -305,10 +395,9 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 				} else {
 					makeToast("Null");
 				}
-				/*if (d != null) {
-					d.dismiss();
-					d = null;
-				}*/
+				/*
+				 * if (d != null) { d.dismiss(); d = null; }
+				 */
 				super.onSuccess(statusCode, headers, response);
 				getAccInfo(true);
 			}
@@ -326,7 +415,8 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 		 * d.setMessage("Đang lấy thông tin tài khoản..."); }
 		 */
 		if (!isAfterPay) {
-			d=ProgressDialog.show(this, "", "Đang lấy thông tin tài khoản...");
+			d = ProgressDialog
+					.show(this, "", "Đang lấy thông tin tài khoản...");
 		}
 		JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
 			@Override
@@ -359,7 +449,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 					e.printStackTrace();
 				}
 				DisplayUtils.log(response.toString());
-				
+
 				if (isAfterPay) {
 					tvMain.setText("TK Chính:"
 							+ SharePreferenceUtils.getGold(
@@ -370,7 +460,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 					tvPromotion2.setText("TK KM2:"
 							+ SharePreferenceUtils.getGold(
 									UserInfoActivity.this, 3) + " gold");
-				}else{
+				} else {
 					showDialogAccBillInfo();
 				}
 				super.onSuccess(statusCode, headers, response);
@@ -411,7 +501,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 		dialogInfo.show();
 	}
 
-	private void getHistory() {
+	/*private void getHistory() {
 		d = ProgressDialog.show(this, "", "Đang lấy lịch sử giao dịch...");
 		JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
 			@Override
@@ -428,23 +518,27 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
 					JSONObject response) {
-				/*
+				
 				 * try { makeToast(response.getString("Message")); } catch
 				 * (JSONException e) { // TODO Auto-generated catch block
 				 * e.printStackTrace(); }
-				 */
+				 
 				if (d != null) {
 					d.dismiss();
 					d = null;
 				}
-				makeToast(response.toString());
+				//makeToast(response.toString());
 				DisplayUtils.log("History:" + response.toString());
 				super.onSuccess(statusCode, headers, response);
+				Intent intent = new Intent(UserInfoActivity.this, ListHistoryActivity.class);
+				intent.putExtra("history", response.toString());
+				startActivity(intent);
+				overridePendingTransition(0, 0);
 			}
 
 		};
 		ServiceConnection.getHistoryTransaction(
 				SharePreferenceUtils.getAccID(this), 5, 0, handler);
-	}
+	}*/
 
 }

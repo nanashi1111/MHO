@@ -27,5 +27,9 @@
     <string name="gold_transfer">Số lượng gold</string>
     <string name="show_pass_wifi">PASS TRUY CẬP WIFI</string>
     <string name="close">Close</string>
+    <string name="change_password">Thay đổi mật khẩu</string>
+    <string name="old_password">Mật khẩu cũ</string>
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="re_new_password">Nhập lại mật khẩu mới</string>
 
 </resources>

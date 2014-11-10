@@ -3,6 +3,7 @@ package com.maihoangonline.mho;
 import java.io.File;
 import java.util.ArrayList;
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.app.AlertDialog;
@@ -66,6 +67,9 @@ public class HomeActivity extends BaseActivity implements TabListener,
 	private LinearLayout footer;
 	private ProgressDialog d;
 	private int version;
+	private ArrayList<String> listIpWan = new ArrayList<String>();
+	private String ipWan;
+	private String pass;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +125,7 @@ public class HomeActivity extends BaseActivity implements TabListener,
 			}
 
 		});
+
 		bar.addTab(bar.newTab().setText("GAME HOT").setTabListener(this));
 		bar.addTab(bar.newTab().setText("ĐÁNH GIÁ GAME").setTabListener(this));
 		bar.addTab(bar.newTab().setText("TIN MỚI").setTabListener(this));
@@ -322,19 +327,117 @@ public class HomeActivity extends BaseActivity implements TabListener,
 
 			@Override
 			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+				ipWan = new String(arg2).trim();
+
 				((TextView) menu.findViewById(R.id.ip_wan)).setText("Ip wan:"
-						+ new String(arg2));
-				checkUpdate();
+						+ ipWan);
+
+				getListIpWan();
 			}
 
 			@Override
 			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
 					Throwable arg3) {
-				// makeToast("Lỗi kết nối");
+				makeToast("Lỗi kết nối");
 				checkUpdate();
 			}
 		};
 		ServiceConnection.getIpWan(handler);
+
+		/*
+		 * ipWan = "14.162.182.39"; getListIpWan();
+		 */
+	}
+
+	private void getListIpWan() {
+		JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONObject errorResponse) {
+				checkUpdate();
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+				try {
+					JSONArray arr = response.getJSONArray("Data");
+					for (int i = 0; i < arr.length(); i++) {
+						JSONObject ipItem = arr.getJSONObject(i);
+						listIpWan.add(ipItem.getString("IpWans").trim());
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String lIp = "";
+				for (int i = 0; i < listIpWan.size(); i++) {
+					lIp = lIp + listIpWan.get(i) + "\n";
+				}
+				DisplayUtils.log("IPWAN:" + lIp);
+				DisplayUtils.log("MYIPWAN:" + ipWan);
+				DisplayUtils.log("CHECKIPWAN:" + checkIpWanInList());
+				super.onSuccess(statusCode, headers, response);
+				if (checkIpWanInList()) {
+					getListPassword();
+				} else {
+					checkUpdate();
+				}
+			}
+		};
+		ServiceConnection.getListIpWan(handler);
+	}
+
+	private void getListPassword() {
+		JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONObject errorResponse) {
+				checkUpdate();
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+				try {
+					JSONArray arr = response.getJSONArray("Data");
+					/*
+					 * for(int i=0;i<arr.length();i++){ JSONObject ipItem =
+					 * arr.getJSONObject(i);
+					 * 
+					 * }
+					 */
+					JSONObject pwItem = arr.getJSONObject(0);
+					pass = pwItem.getString("Link");
+					((TextView) menu.findViewById(R.id.ip_wan))
+							.setText("Pass truy cập wifi miễn phí:" + pass);
+					new AlertDialog.Builder(HomeActivity.this)
+							.setTitle("Mật khẩu")
+							.setMessage(
+									"Bạn hãy copy mã "
+											+ pass
+											+ " và truy cập http://wifi.mho.vn để sử dụng Wifi miễn phí nhé!")
+							.setNegativeButton("OK",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface arg0, int arg1) {
+											Intent browserIntent = new Intent(
+													Intent.ACTION_VIEW,
+													Uri.parse("http://wifi.mho.vn/"));
+											startActivity(browserIntent);
+										}
+									}).setCancelable(true).show();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				super.onSuccess(statusCode, headers, response);
+				checkUpdate();
+			}
+		};
+		ServiceConnection.getListPassword(handler);
 	}
 
 	private void setupActionBar() {
@@ -690,7 +793,9 @@ public class HomeActivity extends BaseActivity implements TabListener,
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						setupSlidingMenuLoggedIn();
+						if (success) {
+							setupSlidingMenuLoggedIn();
+						}
 					}
 				}).setCancelable(false).show();
 	}
@@ -755,6 +860,10 @@ public class HomeActivity extends BaseActivity implements TabListener,
 			setupSlidingMenuLoggedIn();
 		} else {
 			setupSlidingMenu();
+		}
+		if (pass != null) {
+			((TextView) menu.findViewById(R.id.ip_wan))
+					.setText("Pass truy cập wifi miễn phí:" + pass);
 		}
 	}
 
@@ -1067,6 +1176,15 @@ public class HomeActivity extends BaseActivity implements TabListener,
 
 							}
 						}).setCancelable(true).show();
+	}
+
+	private boolean checkIpWanInList() {
+		for (int i = 0; i < listIpWan.size(); i++) {
+			if (listIpWan.get(i).equals(ipWan)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

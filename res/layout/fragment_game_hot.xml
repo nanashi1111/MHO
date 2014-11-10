@@ -8,11 +8,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <ImageView
+        <!--
+             <ImageView
             android:id="@+id/banner"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0.0dip" />
+        -->
+
+        <!-- <com.devsmart.android.ui.HorizontalListView
+            android:id="@+id/lv_banner"
+            android:background="@color/blue"
+            android:layout_width="fill_parent"
+            android:layout_height="150sp" >
+        </com.devsmart.android.ui.HorizontalListView> -->
+        
+        <Gallery android:id="@+id/lv_banner"
+            android:background="@color/blue"
+            android:layout_width="fill_parent"
+            android:layout_height="150sp" />
 
         <LinearLayout
             android:layout_width="fill_parent"
