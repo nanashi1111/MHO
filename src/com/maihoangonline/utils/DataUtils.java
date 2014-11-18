@@ -81,5 +81,8 @@ public class DataUtils {
 	public static boolean isInDownloadScreen = false;
 	public static final String GCM_PROJECT_ID = "982233253442";
 	public static String DEVICE_TOKEN="";
+	
+	public static String PASS_WIFI;
+	public static String USER_WIFI;
 
 }

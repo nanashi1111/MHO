@@ -4,10 +4,7 @@ import java.util.ArrayList;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-import com.maihoangonline.mho.R;
-import com.maihoangonline.utils.DataUtils;
 import com.maihoangonline.utils.DisplayUtils;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
@@ -18,6 +15,7 @@ import android.widget.Gallery;
 import android.widget.Gallery.LayoutParams;
 import android.widget.ImageView;
 
+@SuppressWarnings("deprecation")
 public class BannerAdapter extends ArrayAdapter<String> {
 
 	Context c;
@@ -32,7 +30,6 @@ public class BannerAdapter extends ArrayAdapter<String> {
 		this.gal=gal;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		/*View v;

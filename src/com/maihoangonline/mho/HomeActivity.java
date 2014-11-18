@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -210,6 +211,12 @@ public class HomeActivity extends BaseActivity implements TabListener,
 				}
 			}
 		});
+
+		if (DataUtils.PASS_WIFI != null && DataUtils.USER_WIFI != null) {
+			((TextView) menu.findViewById(R.id.ip_wan))
+					.setText("Pass truy cập wifi miễn phí: " + pass
+							+ " Tên truy cập: " + DataUtils.USER_WIFI);
+		}
 	}
 
 	private void setupSlidingMenuLoggedIn() {
@@ -296,6 +303,12 @@ public class HomeActivity extends BaseActivity implements TabListener,
 				}
 			}
 		});
+
+		if (DataUtils.PASS_WIFI != null && DataUtils.USER_WIFI != null) {
+			((TextView) menu.findViewById(R.id.ip_wan))
+					.setText("Pass truy cập wifi miễn phí: " + pass
+							+ " Tên truy cập: " + DataUtils.USER_WIFI);
+		}
 	}
 
 	/*
@@ -399,6 +412,7 @@ public class HomeActivity extends BaseActivity implements TabListener,
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
 					JSONObject response) {
+				// makeToast(response.toString());
 				try {
 					JSONArray arr = response.getJSONArray("Data");
 					/*
@@ -409,20 +423,39 @@ public class HomeActivity extends BaseActivity implements TabListener,
 					 */
 					JSONObject pwItem = arr.getJSONObject(0);
 					pass = pwItem.getString("Link");
+					DataUtils.PASS_WIFI = pass;
+					DataUtils.USER_WIFI = pwItem.getString("Name");
 					((TextView) menu.findViewById(R.id.ip_wan))
 							.setText("Pass truy cập wifi miễn phí:" + pass);
 					new AlertDialog.Builder(HomeActivity.this)
 							.setTitle("Mật khẩu")
 							.setMessage(
-									"Bạn hãy copy mã "
+									"Bạn hãy copy tên truy cập: "
+											+ DataUtils.USER_WIFI
+											+ " và mã "
 											+ pass
 											+ " và truy cập http://wifi.mho.vn để sử dụng Wifi miễn phí nhé!")
 							.setNegativeButton("OK",
 									new DialogInterface.OnClickListener() {
 
+										@SuppressWarnings("deprecation")
 										@Override
 										public void onClick(
 												DialogInterface arg0, int arg1) {
+											int sdk = android.os.Build.VERSION.SDK_INT;
+											if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+												android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+												clipboard.setText(new String(
+														DataUtils.USER_WIFI));
+											} else {
+												android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+												android.content.ClipData clip = android.content.ClipData
+														.newPlainText(
+																"text label",
+																new String(
+																		DataUtils.USER_WIFI));
+												clipboard.setPrimaryClip(clip);
+											}
 											Intent browserIntent = new Intent(
 													Intent.ACTION_VIEW,
 													Uri.parse("http://wifi.mho.vn/"));
@@ -861,9 +894,10 @@ public class HomeActivity extends BaseActivity implements TabListener,
 		} else {
 			setupSlidingMenu();
 		}
-		if (pass != null) {
+		if (DataUtils.PASS_WIFI != null && DataUtils.USER_WIFI != null) {
 			((TextView) menu.findViewById(R.id.ip_wan))
-					.setText("Pass truy cập wifi miễn phí:" + pass);
+					.setText("Pass truy cập wifi miễn phí: " + pass
+							+ " Tên truy cập: " + DataUtils.USER_WIFI);
 		}
 	}
 

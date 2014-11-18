@@ -103,8 +103,8 @@ public class OtherActivity extends BaseActivity implements OnClickListener {
 		if (tab == 2) {
 			btTopic.setBackgroundResource(R.drawable.btn_chuyen_de_focus);
 		}
-		
-		footer = (LinearLayout)findViewById(R.id.footer);
+
+		footer = (LinearLayout) findViewById(R.id.footer);
 	}
 
 	private void setupActionBar() {
@@ -148,7 +148,8 @@ public class OtherActivity extends BaseActivity implements OnClickListener {
 					frameTitle.setVisibility(View.GONE);
 					break;
 				case R.id.download:
-					startActivity(new Intent(OtherActivity.this,DownloadProgressActivity.class));
+					startActivity(new Intent(OtherActivity.this,
+							DownloadProgressActivity.class));
 					overridePendingTransition(0, 0);
 					break;
 				}
@@ -265,6 +266,13 @@ public class OtherActivity extends BaseActivity implements OnClickListener {
 				}
 			}
 		});
+
+		if (DataUtils.PASS_WIFI != null && DataUtils.USER_WIFI != null) {
+			((TextView) menu.findViewById(R.id.ip_wan))
+					.setText("Pass truy cập wifi miễn phí: "
+							+ DataUtils.PASS_WIFI + "\nTên truy cập: "
+							+ DataUtils.USER_WIFI);
+		}
 	}
 
 	private void setupSlidingMenuLoggedIn() {
@@ -346,6 +354,13 @@ public class OtherActivity extends BaseActivity implements OnClickListener {
 				}
 			}
 		});
+
+		if (DataUtils.PASS_WIFI != null && DataUtils.USER_WIFI != null) {
+			((TextView) menu.findViewById(R.id.ip_wan))
+					.setText("Pass truy cập wifi miễn phí: "
+							+ DataUtils.PASS_WIFI + "\nTên truy cập: "
+							+ DataUtils.USER_WIFI);
+		}
 	}
 
 	private void showDialogLogin() {
@@ -500,7 +515,10 @@ public class OtherActivity extends BaseActivity implements OnClickListener {
 				if (DataUtils.isInErrCode(ret)) {
 					// Put logged info
 					SharePreferenceUtils.putLogInfo(OtherActivity.this, false);
-
+					if (dialog != null) {
+						dialog.dismiss();
+						dialog = null;
+					}
 					showDialogRespose(false);
 				} else {
 					// Put logged info
@@ -522,7 +540,6 @@ public class OtherActivity extends BaseActivity implements OnClickListener {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	private void showDialogRespose(final boolean success) {
@@ -537,7 +554,9 @@ public class OtherActivity extends BaseActivity implements OnClickListener {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						setupSlidingMenuLoggedIn();
+						if (success) {
+							setupSlidingMenuLoggedIn();
+						}
 					}
 				}).setCancelable(false).show();
 	}
@@ -679,37 +698,45 @@ public class OtherActivity extends BaseActivity implements OnClickListener {
 		} else {
 			setupSlidingMenu();
 		}
+		if (DataUtils.PASS_WIFI != null && DataUtils.USER_WIFI != null) {
+			((TextView) menu.findViewById(R.id.ip_wan))
+					.setText("Pass truy cập wifi miễn phí: "
+							+ DataUtils.PASS_WIFI + "\nTên truy cập: "
+							+ DataUtils.USER_WIFI);
+		}
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		
-		switch(keyCode){
+
+		switch (keyCode) {
 		case KeyEvent.KEYCODE_MENU:
-			if(DataUtils.SHOW_FOOTER){
+			if (DataUtils.SHOW_FOOTER) {
 				AnimationUtils.setFadeOutAnim(footer);
 				DataUtils.SHOW_FOOTER = false;
-			}else{
+			} else {
 				AnimationUtils.setFadeInAnim(footer);
 				DataUtils.SHOW_FOOTER = true;
 			}
 			break;
-		
+
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
-	private void getIpWan(){
+
+	private void getIpWan() {
 		AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
-			
+
 			@Override
 			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-				((TextView)menu.findViewById(R.id.ip_wan)).setText("Ip wan:"+new String(arg2));
+				((TextView) menu.findViewById(R.id.ip_wan)).setText("Ip wan:"
+						+ new String(arg2));
 			}
-			
+
 			@Override
-			public void onFailure(int arg0, Header[] arg1, byte[] arg2, Throwable arg3) {
-				//makeToast("Lỗi kết nối");
+			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+					Throwable arg3) {
+				// makeToast("Lỗi kết nối");
 			}
 		};
 		ServiceConnection.getIpWan(handler);

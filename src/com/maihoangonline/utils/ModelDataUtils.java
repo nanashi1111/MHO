@@ -112,5 +112,13 @@ public class ModelDataUtils {
 		}
 		return digest;
 	}
+	
+	public static String[] splitUsernamePassword(String total, String pass){
+		String[] split = new String[2];
+		int index = total.indexOf(pass);
+		split[0] = total.subSequence(0, index).toString();
+		split[1] = pass;
+		return split;
+	}
 
 }

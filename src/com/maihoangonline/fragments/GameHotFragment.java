@@ -22,7 +22,6 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Gallery;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import com.costum.android.widget.LoadMoreListView;
@@ -39,6 +38,7 @@ import com.maihoangonline.utils.DataUtils;
 import com.maihoangonline.utils.DisplayUtils;
 import com.maihoangonline.utils.ServiceConnection;
 
+@SuppressWarnings("deprecation")
 @SuppressLint("ValidFragment")
 public class GameHotFragment extends Fragment implements OnClickListener,
 		OnItemClickListener {
@@ -573,7 +573,7 @@ public class GameHotFragment extends Fragment implements OnClickListener,
 						listLinkBanner.add("http://mobile.mho.vn//Upload/ImgSlide/BIET THU2.ES1T.jpg");*/
 					}
 					bannerAdapter.notifyDataSetChanged();
-					Toast.makeText(getActivity(), "So luong anh:"+listLinkBanner.size(), Toast.LENGTH_LONG).show();
+					//Toast.makeText(getActivity(), "So luong anh:"+listLinkBanner.size(), Toast.LENGTH_LONG).show();
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

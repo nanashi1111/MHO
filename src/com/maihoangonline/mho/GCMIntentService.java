@@ -1,5 +1,7 @@
 package com.maihoangonline.mho;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,21 +29,12 @@ public class GCMIntentService extends GCMBaseIntentService{
 		//generateNotification(arg0, "Notification");
 		String jsonMsg = arg1.getStringExtra("message");
 		DisplayUtils.log(jsonMsg);
-		generateNotification(arg0, jsonMsg);
-		/*try {
-			JSONObject json = new JSONObject(jsonMsg);
-			//Toast.makeText(arg0, jsonMsg, Toast.LENGTH_LONG).show();
-			DisplayUtils.log(jsonMsg);
-			String msg = json.getString("Name");
-			if(msg==null||msg.isEmpty()){
-				msg = "Đã có bản cập nhật mới";
-			}
-			generateNotification(arg0, msg);
-			Toast.makeText(arg0, jsonMsg, Toast.LENGTH_LONG).show();
-			DisplayUtils.log(jsonMsg);
-		} catch (JSONException e) {
+		try {
+			generateNotification(arg0, URLDecoder.decode(jsonMsg, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-		}*/
+		}
+		
 		
 	}
 
@@ -59,7 +52,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 	
 	@SuppressWarnings({ "deprecation" })
 	private static void generateNotification(Context context, String message) {
-		int icon = R.drawable.app_icon;
+		int icon = R.drawable.icon_notify;
 		long when = System.currentTimeMillis();
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);

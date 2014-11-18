@@ -8,10 +8,12 @@
         android:id="@+id/history_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10sp"
         android:textColor="@color/blue"
         android:textStyle="bold" />
 
-    <TextView        android:id="@+id/history_date"
+    <TextView
+        android:layout_margin="10sp"        android:id="@+id/history_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/greenEnd" />
