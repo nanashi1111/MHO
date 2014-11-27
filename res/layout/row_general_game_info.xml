@@ -8,6 +8,7 @@
     android:weightSum="10" >
 
     <ImageView
+        
         android:id="@+id/game_logo"
         android:layout_width="0dp"
         android:layout_height="100sp"

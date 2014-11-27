@@ -32,26 +32,7 @@ public class BannerAdapter extends ArrayAdapter<String> {
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		/*View v;
-		LayoutInflater inf = (LayoutInflater) c
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		v = inf.inflate(R.layout.row_banner, null);
-		ImageView ivBanner = (ImageView) v.findViewById(R.id.banner);
-		UrlImageViewHelper.setUrlDrawable(ivBanner, listLink.get(position),
-				new UrlImageViewCallback() {
-
-					@Override
-					public void onLoaded(ImageView imageView,
-							Bitmap loadedBitmap, String url,
-							boolean loadedFromCache) {
-						DisplayUtils.log("Loaded:"+listLink.get(position));
-						if (!loadedFromCache) {
-							AlphaAnimation anim = new AlphaAnimation(0f, 1f);
-							anim.setDuration(300);
-							imageView.startAnimation(anim);
-						}
-					}
-				});*/
+		
 		ImageView ivBanner = new ImageView(c);
 		ivBanner.setLayoutParams(new Gallery.LayoutParams(LayoutParams.FILL_PARENT, gal.getLayoutParams().height));
 		ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
